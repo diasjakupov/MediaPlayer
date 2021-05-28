@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="video"
+            type="com.example.mediaplayer.data.models.Video" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/videoItemRow"
+        android:layout_width="match_parent"
+        android:layout_height="235dp">
+
+        <ImageView
+            android:id="@+id/videoThumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@color/videoThumbnailBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_video_library" />
+
+        <ImageView
+            android:id="@+id/videoItemDots"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/videoThumbnail"
+            app:srcCompat="@drawable/ic_three_dots" />
+
+        <TextView
+            android:id="@+id/videoTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{video.name}"
+            android:textColor="@color/titleColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/videoItemDots"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/videoThumbnail"
+            app:layout_constraintTop_toBottomOf="@+id/videoThumbnail"
+            tools:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a ty" />
+
+        <TextView
+            android:id="@+id/videoDuration"
+            convertDuration="@{video.duration}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/duration_background"
+            android:paddingStart="5dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="2dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/videoThumbnail"
+            app:layout_constraintEnd_toEndOf="@+id/videoThumbnail"
+            tools:text="2:13:00" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

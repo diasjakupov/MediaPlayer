@@ -12,5 +12,25 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="bottomNavigationStyle">@style/customBottomNav</item>
+        <item name="actionBarStyle">@style/customToolbar</item>
+        <item name="actionBarTheme">@style/customToolbar</item>
+    </style>
+
+
+
+    <style name="customToolbar" parent="Widget.MaterialComponents.ActionBar.Primary">
+        <item name="background">@color/white</item>
+        <item name="android:textColorPrimary">@color/actionBarTitleColor</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24dp</item>
+        <item name="fontFamily">@font/lato_bold</item>
+    </style>
+
+
+    <style name="customBottomNav" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/bottomNav</item>
+        <item name="itemTextColor">@color/bottom_nav_item</item>
+        <item name="itemIconTint">@color/bottom_nav_item</item>
     </style>
 </resources>
