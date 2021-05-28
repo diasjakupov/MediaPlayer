@@ -8,6 +8,7 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.mediaplayer.data.models.Video
+import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -44,27 +45,27 @@ class VideoProvider @Inject constructor(
             selectionArgs,
             sortedOrder
         )
-        Log.e("TAG", "${query?.count}")
         query?.use { cursor->
-
             val idColumn=cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
             val nameColumn=cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
             val durationColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)
             val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
-            Log.e("TAG", "inside query")
-            while (cursor.moveToNext()){
-                Log.e("TAG", "inside while loop")
-                val idValue = cursor.getLong(idColumn)
-                val nameValue = cursor.getString(nameColumn)
-                val durationValue = cursor.getInt(durationColumn)
-                val sizeValue = cursor.getInt(sizeColumn)
-                val contentUri=ContentUris.withAppendedId(
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                    idValue
-                )
+            try {
+                while (cursor.moveToNext()){
+                    val idValue = cursor.getLong(idColumn)
+                    val nameValue = cursor.getString(nameColumn)
+                    val durationValue = cursor.getInt(durationColumn)
+                    val sizeValue = cursor.getInt(sizeColumn)
+                    val contentUri=ContentUris.withAppendedId(
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                        idValue
+                    )
 
-                listOfVideo.add(Video(contentUri, nameValue, durationValue, sizeValue))
+                    listOfVideo.add(Video(contentUri, nameValue, durationValue, sizeValue))
+                }
+            }catch (e:Exception){
+                Log.e("TAG", e.toString())
             }
         }
         return listOfVideo

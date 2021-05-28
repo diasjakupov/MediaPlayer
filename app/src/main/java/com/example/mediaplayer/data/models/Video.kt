@@ -1,5 +1,6 @@
 package com.example.mediaplayer.data.models
 
+import android.graphics.Bitmap
 import android.net.Uri
 
 data class Video(
