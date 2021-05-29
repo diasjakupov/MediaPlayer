@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             R.id.audioList,
             R.id.videoList
         ))
+        setSupportActionBar(customToolBar)
         bottomNavigation.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appConfig)
     }

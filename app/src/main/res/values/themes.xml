@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MediaPlayer" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.MediaPlayer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -13,17 +13,12 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="bottomNavigationStyle">@style/customBottomNav</item>
-        <item name="actionBarStyle">@style/customToolbar</item>
-        <item name="actionBarTheme">@style/customToolbar</item>
     </style>
 
 
-
-    <style name="customToolbar" parent="Widget.MaterialComponents.ActionBar.Primary">
-        <item name="background">@color/white</item>
-        <item name="android:textColorPrimary">@color/actionBarTitleColor</item>
+    <style name="customToolbar" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24dp</item>
+        <item name="android:textSize">24sp</item>
         <item name="fontFamily">@font/lato_bold</item>
     </style>
 
