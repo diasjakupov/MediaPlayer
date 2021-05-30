@@ -16,5 +16,20 @@
         android:name="com.example.mediaplayer.ui.fragments.videoList.VideoListFragment"
         tools:layout="@layout/fragment_video_list"
         android:label="Video" >
+        <action
+            android:id="@+id/action_videoList_to_videoInfoFragment"
+            app:destination="@id/videoInfoFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/videoInfoFragment"
+        android:name="com.example.mediaplayer.ui.fragments.videoList.VideoInfoFragment"
+        android:label="fragment_video_info"
+        tools:layout="@layout/fragment_video_info" >
+        <action
+            android:id="@+id/action_videoInfoFragment_to_videoList"
+            app:destination="@id/videoList" />
+        <argument
+            android:name="video"
+            app:argType="com.example.mediaplayer.data.models.Video" />
+    </dialog>
 </navigation>

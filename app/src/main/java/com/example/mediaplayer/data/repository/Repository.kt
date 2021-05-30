@@ -9,14 +9,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.providers.VideoProvider
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.collections.ArrayList
 
+
+@ActivityRetainedScoped
 class Repository @Inject constructor(
     private val videoProvider: VideoProvider,
     private val app: Application
 ){
+    init {
+        Log.e("TAG", "create repository singleton")
+    }
+
+
     private val _videoList= MutableLiveData<ArrayList<Video>>()
     val videoList: LiveData<ArrayList<Video>> = _videoList
 

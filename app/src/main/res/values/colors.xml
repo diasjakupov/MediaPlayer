@@ -20,6 +20,7 @@
     <color name="actionBarTitleColor">@color/orange</color>
     <color name="bottomNav">@color/white</color>
     <color name="videoBottomSheet">@color/lightGray</color>
+    <color name="rippleColor">@color/orange</color>
     <color name="bottomNavItemChecked">@color/orange</color>
     <color name="bottomNavItemColor">@color/darkGrey</color>
 </resources>

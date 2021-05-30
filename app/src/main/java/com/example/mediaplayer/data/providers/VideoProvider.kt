@@ -8,11 +8,13 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.mediaplayer.data.models.Video
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.lang.Exception
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
-
+@ActivityRetainedScoped
 class VideoProvider @Inject constructor(
     private val application: Application
 ) {

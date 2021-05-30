@@ -5,12 +5,14 @@ import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.utils.VideoDiffUtils
 import com.example.mediaplayer.databinding.VideoItemLayoutBinding
+import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -41,6 +43,12 @@ class VideoListAdapter @Inject constructor(): RecyclerView.Adapter<VideoListAdap
             val thumbnail=context.contentResolver.loadThumbnail(video.uri, Size(400, 150), null)
             binding.video=video
            Glide.with(context).load(thumbnail).into(binding.videoThumbnail)
+
+            binding.videoItemDots.setOnClickListener {
+                val action=VideoListFragmentDirections.actionVideoListToVideoInfoFragment(video)
+                Log.e("TAG", "${video}")
+                binding.root.findNavController().navigate(action)
+            }
         }
 
 
