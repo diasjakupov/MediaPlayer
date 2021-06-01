@@ -21,22 +21,22 @@ import kotlin.collections.ArrayList
 class VideoListViewModel @Inject constructor(
     private val repository: Repository,
     app: Application
-): AndroidViewModel(app) {
-    val videoList=repository.videoList
-    val searchedList=MutableLiveData<List<Video>?>()
+) : AndroidViewModel(app) {
+    val videoList = repository.videoList
+    val searchedList = MutableLiveData<List<Video>?>()
 
-    fun getVideoList()=repository.getVideoList()
+    fun getVideoList() = repository.getVideoList()
 
-    fun searchVideoList(search:String){
-        if(search.isNotEmpty()) {
+    fun searchVideoList(search: String) {
+        if (search.isNotEmpty()) {
             val data = videoList.value?.filter {
-                it.name.toLowerCase(Locale.ROOT).contains(search.toLowerCase(Locale.ROOT))
+                it.name?.toLowerCase(Locale.ROOT)!!.contains(search.toLowerCase(Locale.ROOT))
             }
             if (data != null) {
                 searchedList.value = data
             }
-        }else{
-            searchedList.value=videoList.value
+        } else {
+            searchedList.value = videoList.value
         }
     }
 
