@@ -34,10 +34,12 @@ class Repository @Inject constructor(
                 PackageManager.PERMISSION_GRANTED
     }
 
-    fun getVideoList(){
+    fun getVideoList(isForced: Boolean=false){
         if(checkPermission()){
-            val data=videoProvider.getVideoList()
-            _videoList.value=data
+            if(videoList.value.isNullOrEmpty() || isForced){
+                val data=videoProvider.getVideoList()
+                _videoList.value=data
+            }
         }
     }
 

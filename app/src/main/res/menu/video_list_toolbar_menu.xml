@@ -8,6 +8,5 @@
         android:iconTint="@color/white"
         tools:targetApi="o"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        android:id="@+id/videoListSearch"
-        android:icon="@drawable/ic_search" />
+        android:id="@+id/videoListSearch"/>
 </menu>

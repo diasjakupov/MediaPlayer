@@ -23,4 +23,7 @@
     <color name="rippleColor">@color/orange</color>
     <color name="bottomNavItemChecked">@color/orange</color>
     <color name="bottomNavItemColor">@color/darkGrey</color>
+    <color name="itemVideoInfoColor">@color/darkGrey</color>
+    <color name="editTextColor">@color/black</color>
+    <color name="searchIconColor">@color/darkGrey</color>
 </resources>

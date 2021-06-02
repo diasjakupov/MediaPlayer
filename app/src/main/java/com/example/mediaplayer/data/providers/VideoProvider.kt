@@ -34,7 +34,6 @@ class VideoProvider @Inject constructor(
         return arrayOf(
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.DISPLAY_NAME,
-            MediaStore.Video.Media.DURATION,
             MediaStore.Video.Media.SIZE
         )
     }

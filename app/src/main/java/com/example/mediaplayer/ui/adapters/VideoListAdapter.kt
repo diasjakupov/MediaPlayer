@@ -1,6 +1,8 @@
 package com.example.mediaplayer.ui.adapters
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
@@ -44,17 +46,14 @@ class VideoListAdapter @Inject constructor() : RecyclerView.Adapter<VideoListAda
         fun bind(video: Video) {
             binding.video = video
             try {
-                val thumbnail =
-                    context.contentResolver.loadThumbnail(video.uri, Size(400, 150), null)
-                Glide.with(context).load(thumbnail).into(binding.videoThumbnail)
+                val retriever=MediaMetadataRetriever()
+                retriever.setDataSource(context, video.uri)
+                Glide.with(context).load(retriever.frameAtTime).into(binding.videoThumbnail)
             } catch (e: Exception) {
                 Glide.with(context).load(R.drawable.ic_error).into(binding.videoThumbnail)
             }
-
-
             binding.videoItemDots.setOnClickListener {
                 val action = VideoListFragmentDirections.actionVideoListToVideoInfoFragment(video)
-                Log.e("TAG", "${video}")
                 binding.root.findNavController().navigate(action)
             }
         }
