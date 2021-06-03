@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.Video
+import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.utils.VideoDiffUtils
 import com.example.mediaplayer.databinding.VideoItemLayoutBinding
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
@@ -45,15 +46,10 @@ class VideoListAdapter @Inject constructor() : RecyclerView.Adapter<VideoListAda
         RecyclerView.ViewHolder(binding.root) {
         fun bind(video: Video) {
             binding.video = video
-            try {
-                val retriever=MediaMetadataRetriever()
-                retriever.setDataSource(context, video.uri)
-                Glide.with(context).load(retriever.frameAtTime).into(binding.videoThumbnail)
-            } catch (e: Exception) {
-                Glide.with(context).load(R.drawable.ic_error).into(binding.videoThumbnail)
-            }
+            Glide.with(context).load(video.thumbnail).into(binding.videoThumbnail)
             binding.videoItemDots.setOnClickListener {
-                val action = VideoListFragmentDirections.actionVideoListToVideoInfoFragment(video)
+                val videoInfo= VideoInfo(video.uri, video.name, video.duration, video.size)
+                val action = VideoListFragmentDirections.actionVideoListToVideoInfoFragment(videoInfo)
                 binding.root.findNavController().navigate(action)
             }
         }

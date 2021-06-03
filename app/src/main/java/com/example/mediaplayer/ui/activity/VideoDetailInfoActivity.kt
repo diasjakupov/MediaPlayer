@@ -1,21 +1,18 @@
 package com.example.mediaplayer.ui.activity
 
-import android.media.MediaMetadata
-import android.media.MediaMetadataRetriever
-import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
+import android.media.MediaExtractor
+import android.media.MediaFormat
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.navigation.findNavController
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
-import com.bumptech.glide.Glide
-import com.example.mediaplayer.R
 import com.example.mediaplayer.databinding.ActivityVideoDetailInfoBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_video_detail_info.*
 import kotlinx.android.synthetic.main.activity_video_detail_info.customToolBar
+
 
 class VideoDetailInfoActivity : AppCompatActivity() {
     private var _binding: ActivityVideoDetailInfoBinding? = null
@@ -31,6 +28,13 @@ class VideoDetailInfoActivity : AppCompatActivity() {
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        val extractor=MediaExtractor()
+        extractor.setDataSource(this, args.video.uri, hashMapOf())
+        val trackCount=extractor.trackCount
+        for (i in 1 until trackCount) {
+            val format = extractor.getTrackFormat(i)
+            Toast.makeText(this, "$format", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

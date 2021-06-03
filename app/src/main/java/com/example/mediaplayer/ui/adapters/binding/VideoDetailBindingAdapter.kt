@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.example.mediaplayer.data.models.Video
+import com.example.mediaplayer.data.models.VideoInfo
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
@@ -20,7 +21,7 @@ class VideoDetailBindingAdapter {
 
         @JvmStatic
         @BindingAdapter("applyVideoImage")
-        fun applyVideoImage(view:ImageView, video:Video){
+        fun applyVideoImage(view:ImageView, video:VideoInfo){
             val retriever=MediaMetadataRetriever()
             retriever.setDataSource(view.context, video.uri)
             Glide.with(view.context)

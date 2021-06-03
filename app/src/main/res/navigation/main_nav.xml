@@ -30,7 +30,7 @@
             app:destination="@id/videoList" />
         <argument
             android:name="video"
-            app:argType="com.example.mediaplayer.data.models.Video" />
+            app:argType="com.example.mediaplayer.data.models.VideoInfo" />
         <action
             android:id="@+id/action_videoInfoFragment_to_videoDetailInfoActivity"
             app:destination="@id/videoDetailInfoActivity" />
@@ -41,6 +41,6 @@
         tools:layout="@layout/activity_video_detail_info" >
         <argument
             android:name="video"
-            app:argType="com.example.mediaplayer.data.models.Video" />
+            app:argType="com.example.mediaplayer.data.models.VideoInfo" />
     </activity>
 </navigation>

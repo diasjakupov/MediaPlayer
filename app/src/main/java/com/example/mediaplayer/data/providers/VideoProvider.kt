@@ -1,18 +1,19 @@
 package com.example.mediaplayer.data.providers
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.ContentUris
+import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.os.Build
+import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
-import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.Video
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.lang.Exception
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
 @ActivityRetainedScoped
@@ -66,7 +67,14 @@ class VideoProvider @Inject constructor(
 
                     val title = cursor.getString(titleColumn)
                     val size = cursor.getInt(sizeColumn)
-                    listOfVideo.add(Video(contentUri, title, time, size))
+                    val frame=retriever.getFrameAtTime(1)
+                    val thumbnail=if(frame != null){
+                        frame
+                    }else{
+                        BitmapFactory.decodeResource(application.resources, R.drawable.ic_error)
+                    }
+                    Log.e("TAG", "$thumbnail")
+                    listOfVideo.add(Video(contentUri, title, time, thumbnail, size))
                 }
             } catch (e: Exception) {
                 Log.e("TAG", e.toString())

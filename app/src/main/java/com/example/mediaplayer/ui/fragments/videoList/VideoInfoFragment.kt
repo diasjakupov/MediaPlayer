@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mediaplayer.R
+import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.databinding.FragmentVideoInfoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_video_info.*
@@ -23,11 +24,14 @@ class VideoInfoFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding= FragmentVideoInfoBinding.inflate(inflater, container, false)
-        binding.video=args.video
+        _binding = FragmentVideoInfoBinding.inflate(inflater, container, false)
+        binding.video = args.video
 
         binding.videoInformation.setOnClickListener {
-            val action=VideoInfoFragmentDirections.actionVideoInfoFragmentToVideoDetailInfoActivity(args.video)
+            val action =
+                VideoInfoFragmentDirections.actionVideoInfoFragmentToVideoDetailInfoActivity(
+                    args.video
+                )
             findNavController().navigate(action)
         }
         binding.videoDeleteItem.setOnClickListener {
