@@ -25,7 +25,9 @@ class VideoListViewModel @Inject constructor(
     val videoList = repository.videoList
     val searchedList = MutableLiveData<List<Video>?>()
 
-    fun getVideoList() = repository.getVideoList()
+    fun getVideoList() = viewModelScope.launch(Dispatchers.IO) {
+        repository.getVideoList()
+    }
 
     fun searchVideoList(search: String) {
         if (search.isNotEmpty()) {
@@ -39,6 +41,6 @@ class VideoListViewModel @Inject constructor(
             searchedList.value = videoList.value
         }
     }
-
-
 }
+
+

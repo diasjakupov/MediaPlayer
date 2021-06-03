@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mediaplayer.R
 import com.example.mediaplayer.databinding.FragmentVideoInfoBinding
@@ -26,7 +27,8 @@ class VideoInfoFragment : BottomSheetDialogFragment() {
         binding.video=args.video
 
         binding.videoInformation.setOnClickListener {
-            Toast.makeText(this.context, "Clicked", Toast.LENGTH_SHORT).show()
+            val action=VideoInfoFragmentDirections.actionVideoInfoFragmentToVideoDetailInfoActivity(args.video)
+            findNavController().navigate(action)
         }
         binding.videoDeleteItem.setOnClickListener {
             Toast.makeText(this.context, "Clicked", Toast.LENGTH_SHORT).show()

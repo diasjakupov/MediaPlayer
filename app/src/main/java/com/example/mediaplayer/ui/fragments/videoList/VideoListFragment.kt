@@ -20,6 +20,7 @@ import com.example.mediaplayer.databinding.FragmentVideoListBinding
 import com.example.mediaplayer.ui.adapters.VideoListAdapter
 import com.todkars.shimmer.ShimmerRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -52,12 +53,14 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun getVideo() {
-        viewModel.videoList.observeOnce(viewLifecycleOwner, { list ->
-            if (list != null) {
-                adapter.updateDataList(list.toList())
-                disableShimmerRecyclerView()
-            }
-        })
+        lifecycleScope.launch{
+            viewModel.videoList.observeOnce(viewLifecycleOwner, { list ->
+                if (list != null) {
+                    adapter.updateDataList(list.toList())
+                    disableShimmerRecyclerView()
+                }
+            })
+        }
     }
 
     private fun searchVideoList(search: String) {

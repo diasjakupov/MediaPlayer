@@ -38,7 +38,7 @@ class Repository @Inject constructor(
         if(checkPermission()){
             if(videoList.value.isNullOrEmpty() || isForced){
                 val data=videoProvider.getVideoList()
-                _videoList.value=data
+                _videoList.postValue(data)
             }
         }
     }
