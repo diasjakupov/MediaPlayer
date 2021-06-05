@@ -1,12 +1,12 @@
 package com.example.mediaplayer.ui.adapters
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.media.MediaMetadataRetriever
-import android.util.Log
-import android.util.Size
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,16 +15,19 @@ import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.utils.VideoDiffUtils
-import com.example.mediaplayer.databinding.VideoItemLayoutBinding
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.android.synthetic.main.video_item_layout.view.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.abs
 
 class VideoListAdapter @Inject constructor() : RecyclerView.Adapter<VideoListAdapter.ViewHolder>() {
-    private var videoList = emptyList<Video>()
-
+    var videoList = emptyList<Video>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        val view = LayoutInflater.from(parent.context).inflate(
+            R.layout.video_item_layout, parent, false
+        )
+        return ViewHolder(parent.context, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -37,31 +40,54 @@ class VideoListAdapter @Inject constructor() : RecyclerView.Adapter<VideoListAda
 
     fun updateDataList(newList: List<Video>) {
         val videoDiffUtil = VideoDiffUtils(videoList, newList)
-        val result = DiffUtil.calculateDiff(videoDiffUtil)
+        val result = DiffUtil.calculateDiff(videoDiffUtil, true)
         videoList = newList
         result.dispatchUpdatesTo(this)
     }
 
-    class ViewHolder(private val binding: VideoItemLayoutBinding, private val context: Context) :
-        RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val context: Context, itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
         fun bind(video: Video) {
-            binding.video = video
-            Glide.with(context).load(video.thumbnail).into(binding.videoThumbnail)
-            binding.videoItemDots.setOnClickListener {
-                val videoInfo= VideoInfo(video.uri, video.name, video.duration, video.size)
-                val action = VideoListFragmentDirections.actionVideoListToVideoInfoFragment(videoInfo)
-                binding.root.findNavController().navigate(action)
+            val title=itemView.findViewById<TextView>(R.id.videoTitle)
+            val image=itemView.findViewById<ImageView>(R.id.videoThumbnail)
+            val dots=itemView.findViewById<ImageView>(R.id.videoItemDots)
+            val duration=itemView.findViewById<TextView>(R.id.videoDuration)
+
+            Glide.with(context).load(video.thumbnail).into(image)
+            title.text = video.name.toString()
+
+            duration.text = convertDuration(video.duration!!)
+            dots.setOnClickListener {
+                val videoInfo = VideoInfo(video.uri, video.name, video.duration, video.size)
+                val action =
+                    VideoListFragmentDirections.actionVideoListToVideoInfoFragment(videoInfo)
+                val navController=Navigation.findNavController(itemView)
+                navController?.navigate(action)
             }
         }
 
-
-        companion object {
-            fun from(parent: ViewGroup): ViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = VideoItemLayoutBinding.inflate(layoutInflater, parent, false)
-                return ViewHolder(binding, parent.context)
+        fun convertDuration(data: Int): String {
+            val initialSeconds = TimeUnit.MILLISECONDS.toSeconds(data.toLong()).toInt()
+            val hours = (initialSeconds / 3600)
+            val minutes = abs(((hours * 3600 - initialSeconds) / 60))
+            val seconds = abs((hours * 3600 + minutes * 60 - initialSeconds))
+            val formatMinutes = if (minutes < 10) {
+                "0$minutes"
+            } else {
+                minutes.toString()
             }
+            val formatHours = if (hours < 10) {
+                "0$hours"
+            } else {
+                hours.toString()
+            }
+            val formatSeconds = if (seconds < 10) {
+                "0$seconds"
+            } else {
+                seconds.toString()
+            }
+            return "$formatHours:$formatMinutes:$formatSeconds"
         }
-
     }
 }
+

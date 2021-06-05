@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.media.Image
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.utils.observeOnce
@@ -31,6 +33,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private val viewModel: VideoListViewModel by viewModels()
     private var _binding: FragmentVideoListBinding? = null
+    private lateinit var recyclerViewState: Parcelable
 
     @Inject
     lateinit var adapter: VideoListAdapter
@@ -44,6 +47,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
         _binding = FragmentVideoListBinding.inflate(inflater, container, false)
         rvShimmer = binding.videoShimmerRV
         rvShimmer.adapter = adapter
+        Log.e("TAG", "create fragment")
         rvShimmer.layoutManager = LinearLayoutManager(this.context)
         startShimmerRecyclerView()
         viewModel.getVideoList()
@@ -54,9 +58,13 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun getVideo() {
         lifecycleScope.launch{
-            viewModel.videoList.observeOnce(viewLifecycleOwner, { list ->
+            viewModel.videoList.observe(viewLifecycleOwner, { list ->
+                Log.e("TAG", "observe list")
                 if (list != null) {
+                    recyclerViewState =
+                        binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!
                     adapter.updateDataList(list.toList())
+                    binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState);
                     disableShimmerRecyclerView()
                 }
             })
@@ -66,7 +74,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun searchVideoList(search: String) {
         startShimmerRecyclerView()
         viewModel.searchVideoList(search)
-        viewModel.searchedList.observeOnce(viewLifecycleOwner, { list ->
+        viewModel.searchedList.observe(viewLifecycleOwner, { list ->
             if (list != null) {
                 adapter.updateDataList(list)
                 disableShimmerRecyclerView()
