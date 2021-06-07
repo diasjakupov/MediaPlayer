@@ -37,7 +37,7 @@
     </dialog>
     <activity
         android:id="@+id/videoDetailInfoActivity"
-        android:name="com.example.mediaplayer.ui.activity.VideoDetailInfoActivity"
+        android:name="com.example.mediaplayer.ui.activity.videoDetailInfo.VideoDetailInfoActivity"
         tools:layout="@layout/activity_video_detail_info" >
         <argument
             android:name="video"

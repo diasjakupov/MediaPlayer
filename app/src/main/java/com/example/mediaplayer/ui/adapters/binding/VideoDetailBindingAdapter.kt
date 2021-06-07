@@ -11,6 +11,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.models.VideoInfo
+import org.apache.commons.io.FileUtils
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
@@ -53,6 +54,24 @@ class VideoDetailBindingAdapter {
                 ""
             }
             view.text = "$formatHours$formatMinutes$formatSeconds"
+        }
+
+        @SuppressLint("SetTextI18n")
+        @JvmStatic
+        @BindingAdapter("convertSize")
+        fun convertSize(view:TextView,data:Int?){
+            view.text= (if(data != null ){
+                FileUtils.byteCountToDisplaySize(data.toLong())
+            }else{
+                ""
+            }).toString()
+        }
+
+        @SuppressLint("SetTextI18n")
+        @JvmStatic
+        @BindingAdapter("setQuality")
+        fun setQuality(view:TextView, data:Int){
+            view.text="${data}p"
         }
     }
 }

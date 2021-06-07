@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_video_info.*
 class VideoInfoFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentVideoInfoBinding? = null
     private val binding get() = _binding!!
-    private val args by navArgs<VideoInfoFragmentArgs>()
+    private val args: VideoInfoFragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,5 +49,4 @@ class VideoInfoFragment : BottomSheetDialogFragment() {
     override fun getTheme(): Int {
         return R.style.CustomBottomSheetDialog
     }
-
 }

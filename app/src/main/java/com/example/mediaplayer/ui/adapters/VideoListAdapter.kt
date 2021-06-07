@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -15,19 +16,26 @@ import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.utils.VideoDiffUtils
+import com.example.mediaplayer.ui.fragments.videoList.VideoInfoFragment
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
+import dagger.hilt.android.qualifiers.ActivityContext
+import kotlinx.android.synthetic.main.activity_video_detail_info.view.*
 import kotlinx.android.synthetic.main.video_item_layout.view.*
+import org.apache.commons.io.FileUtils
+import org.w3c.dom.Text
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 
-class VideoListAdapter @Inject constructor() : RecyclerView.Adapter<VideoListAdapter.ViewHolder>() {
+class VideoListAdapter @Inject constructor(
+    @ActivityContext val context:Context
+) : RecyclerView.Adapter<VideoListAdapter.ViewHolder>() {
     var videoList = emptyList<Video>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
             R.layout.video_item_layout, parent, false
         )
-        return ViewHolder(parent.context, view)
+        return ViewHolder(context, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -58,15 +66,15 @@ class VideoListAdapter @Inject constructor() : RecyclerView.Adapter<VideoListAda
 
             duration.text = convertDuration(video.duration!!)
             dots.setOnClickListener {
-                val videoInfo = VideoInfo(video.uri, video.name, video.duration, video.size)
+                val videoInfo = VideoInfo(video.uri, video.name, video.duration, video.size, video.quality)
                 val action =
                     VideoListFragmentDirections.actionVideoListToVideoInfoFragment(videoInfo)
                 val navController=Navigation.findNavController(itemView)
-                navController?.navigate(action)
+                navController.navigate(action)
             }
         }
 
-        fun convertDuration(data: Int): String {
+        private fun convertDuration(data: Int): String {
             val initialSeconds = TimeUnit.MILLISECONDS.toSeconds(data.toLong()).toInt()
             val hours = (initialSeconds / 3600)
             val minutes = abs(((hours * 3600 - initialSeconds) / 60))
@@ -88,6 +96,7 @@ class VideoListAdapter @Inject constructor() : RecyclerView.Adapter<VideoListAda
             }
             return "$formatHours:$formatMinutes:$formatSeconds"
         }
+
     }
 }
 

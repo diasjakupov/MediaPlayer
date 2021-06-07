@@ -12,3 +12,11 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
         }
     })
 }
+
+fun Int.compareNumber(number:Int):Int{
+    return if(this>number){
+        number
+    }else{
+        this
+    }
+}

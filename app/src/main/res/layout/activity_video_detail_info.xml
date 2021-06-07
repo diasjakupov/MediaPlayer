@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="video"
             type="com.example.mediaplayer.data.models.VideoInfo" />
     </data>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fragmentBackground"
-    tools:context=".ui.activity.VideoDetailInfoActivity">
+    tools:context=".ui.activity.videoDetailInfo.VideoDetailInfoActivity">
 
-    <ImageView
-        android:id="@+id/videoImage"
-        android:layout_width="0dp"
-        android:layout_height="350dp"
-        android:scaleType="centerCrop"
-        applyVideoImage="@{video}"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -30,33 +20,36 @@
         android:layout_height="wrap_content"
         android:background="@color/transparent"
         app:elevation="0dp"
+        app:liftOnScroll="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/customToolBar"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapseToolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/transparent" />
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/videoImage"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:scaleType="centerCrop"
+                applyVideoImage="@{video}"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.6"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/customToolBar"
+                android:layout_width="match_parent"
+                app:layout_collapseMode="pin"
+                app:navigationIconTint="@color/titleColor"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/transparent" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:id="@+id/videoTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textStyle="bold"
-        android:text="@{video.name}"
-        android:textColor="@color/titleColor"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/videoImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/videoDurationIcon"
@@ -79,7 +72,7 @@
         android:textColor="@color/titleColor"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/videoDurationIcon"
-        app:layout_constraintTop_toBottomOf="@+id/videoImage" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <TextView
         android:id="@+id/videoDuration"
@@ -90,8 +83,75 @@
         presentDurationWithUnits="@{video.duration}"
         android:textColor="@color/titleColor"
         android:textSize="14sp"
+        tools:text="44m14s"
         app:layout_constraintStart_toEndOf="@+id/videoDurationIcon"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Size"
+        android:textColor="@color/titleColor"
+        app:layout_constraintStart_toStartOf="@+id/videoDuration"
+        app:layout_constraintTop_toBottomOf="@+id/videoDuration" />
+
+    <TextView
+        android:id="@+id/videoSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        convertSize="@{video.size}"
+        tools:text="4MB"
+        android:textColor="@color/titleColor"
+        app:layout_constraintStart_toStartOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/videoAudioTrackInfoRV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/videoSize" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toTopOf="@+id/textView11"
+        app:srcCompat="@drawable/ic_quality"
+        app:tint="@color/titleColor" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="48dp"
+        android:text="Quality"
+        android:textColor="@color/titleColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        setQuality="@{video.quality}"
+        tools:text="480p"
+        android:textColor="@color/titleColor"
+        app:layout_constraintStart_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
