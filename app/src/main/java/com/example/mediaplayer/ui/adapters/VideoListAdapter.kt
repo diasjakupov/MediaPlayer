@@ -1,6 +1,7 @@
 package com.example.mediaplayer.ui.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +64,6 @@ class VideoListAdapter @Inject constructor(
 
             Glide.with(context).load(video.thumbnail).into(image)
             title.text = video.name.toString()
-
             duration.text = convertDuration(video.duration!!)
             dots.setOnClickListener {
                 val videoInfo = VideoInfo(video.uri, video.name, video.duration, video.size, video.quality)

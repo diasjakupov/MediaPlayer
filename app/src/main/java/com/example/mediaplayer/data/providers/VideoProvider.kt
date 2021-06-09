@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ContentUris
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
+import android.media.ThumbnailUtils
 import android.os.Build
 import android.os.Parcelable
 import android.provider.MediaStore

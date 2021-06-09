@@ -1,20 +1,14 @@
 package com.example.mediaplayer.ui.activity.videoDetailInfo
 
-import android.media.MediaExtractor
-import android.media.MediaFormat
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mediaplayer.databinding.ActivityVideoDetailInfoBinding
-import com.example.mediaplayer.ui.adapters.VideoAudioTrackInfoAdapter
+import com.example.mediaplayer.ui.adapters.VideoItemInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_video_detail_info.*
 import kotlinx.android.synthetic.main.activity_video_detail_info.customToolBar
 import javax.inject.Inject
 
@@ -24,7 +18,8 @@ class VideoDetailInfoActivity : AppCompatActivity() {
     private val args: VideoDetailInfoActivityArgs by navArgs()
     private val binding get() = _binding!!
     @Inject
-    lateinit var adapter: VideoAudioTrackInfoAdapter
+    lateinit var audioAdapter: VideoItemInfoAdapter
+    @Inject lateinit var subTitleAdapter: VideoItemInfoAdapter
     private val viewModel: VideoDetailInfoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,14 +32,13 @@ class VideoDetailInfoActivity : AppCompatActivity() {
         supportActionBar?.title = args.video.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.videoAudioTrackInfoRV.adapter = adapter
+        binding.videoAudioTrackInfoRV.adapter = audioAdapter
         binding.videoAudioTrackInfoRV.layoutManager = LinearLayoutManager(this)
+        viewModel.getExtraDataList(this, args.video.uri)
 
-        viewModel.getAudioList(this, args.video.uri)
-
-        viewModel.audioList.observe(this, {
+        viewModel.extraDataList.observe(this, {
             if (it != null) {
-                adapter.updateDataList(it)
+                audioAdapter.updateDataList(it)
             }
         })
     }
