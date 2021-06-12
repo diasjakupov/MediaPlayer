@@ -11,7 +11,7 @@
     <color name="orange">#F77F00</color>
     <color name="darkGrey">#343a40</color>
     <color name="transparent">#00000000 </color>
-
+    <color name="grey">#787878</color>
 
     <color name="placeholder">#C4C4C4</color>
     <color name="fragmentBackground">@color/lightGray</color>
@@ -27,4 +27,8 @@
     <color name="itemVideoInfoColor">@color/darkGrey</color>
     <color name="editTextColor">@color/black</color>
     <color name="searchIconColor">@color/darkGrey</color>
+    <color name="unplayed_color">@color/darkGrey</color>
+    <color name="buffered_color">@color/grey</color>
+    <color name="video_btn">@color/grey</color>
+    <color name="played_color">@color/orange</color>
 </resources>

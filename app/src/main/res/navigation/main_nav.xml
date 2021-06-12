@@ -43,4 +43,10 @@
             android:name="video"
             app:argType="com.example.mediaplayer.data.models.VideoInfo" />
     </activity>
+    <activity
+        android:id="@+id/videoPlayerActivity"
+        android:name="com.example.mediaplayer.ui.activity.player.VideoPlayerActivity"
+        android:label="activity_video_player"
+        tools:layout="@layout/activity_video_player" >
+    </activity>
 </navigation>

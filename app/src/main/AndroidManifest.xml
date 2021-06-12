@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MediaPlayer"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.activity.videoDetailInfo.VideoDetailInfoActivity"></activity>
+        <activity android:name=".ui.activity.player.VideoPlayerActivity"></activity>
+        <activity android:name=".ui.activity.videoDetailInfo.VideoDetailInfoActivity" />
         <activity android:name=".ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

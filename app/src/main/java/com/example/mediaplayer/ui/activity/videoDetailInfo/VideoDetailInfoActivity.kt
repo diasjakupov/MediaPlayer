@@ -1,12 +1,16 @@
 package com.example.mediaplayer.ui.activity.videoDetailInfo
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mediaplayer.R
 import com.example.mediaplayer.databinding.ActivityVideoDetailInfoBinding
+import com.example.mediaplayer.ui.activity.player.VideoPlayerActivity
 import com.example.mediaplayer.ui.adapters.VideoItemInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_video_detail_info.customToolBar
@@ -41,6 +45,12 @@ class VideoDetailInfoActivity : AppCompatActivity() {
                 audioAdapter.updateDataList(it)
             }
         })
+
+        binding.flButton.setOnClickListener {
+            val intent=Intent(this, VideoPlayerActivity::class.java)
+            intent.putExtra("VIDEO_INFO", args.video)
+            startActivity(intent)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
