@@ -59,9 +59,9 @@ class VideoDetailBindingAdapter {
         @SuppressLint("SetTextI18n")
         @JvmStatic
         @BindingAdapter("convertSize")
-        fun convertSize(view:TextView,data:Int?){
+        fun convertSize(view:TextView,data:Long?){
             view.text= (if(data != null ){
-                FileUtils.byteCountToDisplaySize(data.toLong())
+                FileUtils.byteCountToDisplaySize(data)
             }else{
                 ""
             }).toString()

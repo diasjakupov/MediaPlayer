@@ -12,6 +12,6 @@ data class Video(
     val name:String?,
     val duration: Int?,
     val thumbnail:Bitmap?,
-    val size: Int?,
+    val size: Long?,
     val quality: Int
 ): Parcelable

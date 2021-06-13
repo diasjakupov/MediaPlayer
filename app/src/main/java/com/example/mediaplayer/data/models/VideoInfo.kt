@@ -9,6 +9,6 @@ data class VideoInfo(
     val uri: Uri,
     val name:String?,
     val duration: Int?,
-    val size: Int?,
+    val size: Long?,
     val quality:Int
 ): Parcelable

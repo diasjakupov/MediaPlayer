@@ -16,7 +16,7 @@
         app:resize_mode="fit"
         android:background="@color/black"
         app:hide_on_touch="true"
-        app:show_timeout="1000"
+        app:show_timeout="3000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,10 +25,12 @@
         app:rewind_increment="10000" />
 
     <ProgressBar
-        android:layout_width="64dp"
-        android:layout_height="64dp"
         android:id="@+id/progressBar"
-        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:indeterminateTint="@color/orange"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

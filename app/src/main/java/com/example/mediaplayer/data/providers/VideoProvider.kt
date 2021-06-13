@@ -72,7 +72,7 @@ class VideoProvider @Inject constructor(
                             ?.toInt()
 
                     val title = cursor.getString(titleColumn)
-                    val size = cursor.getInt(sizeColumn)
+                    val size = cursor.getLong(sizeColumn)
                     val frame = retriever.frameAtTime
                     val thumbnail = if (frame != null) {
                         frame

@@ -1,6 +1,7 @@
 package com.example.mediaplayer.ui.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.utils.VideoDiffUtils
+import com.example.mediaplayer.ui.activity.player.VideoPlayerActivity
 import com.example.mediaplayer.ui.fragments.videoList.VideoInfoFragment
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
 import dagger.hilt.android.qualifiers.ActivityContext
@@ -62,15 +64,24 @@ class VideoListAdapter @Inject constructor(
             val dots=itemView.findViewById<ImageView>(R.id.videoItemDots)
             val duration=itemView.findViewById<TextView>(R.id.videoDuration)
 
+            //bind data to view
             Glide.with(context).load(video.thumbnail).into(image)
             title.text = video.name.toString()
             duration.text = convertDuration(video.duration!!)
+
+            //set up onClickListeners
             dots.setOnClickListener {
                 val videoInfo = VideoInfo(video.uri, video.name, video.duration, video.size, video.quality)
                 val action =
                     VideoListFragmentDirections.actionVideoListToVideoInfoFragment(videoInfo)
                 val navController=Navigation.findNavController(itemView)
                 navController.navigate(action)
+            }
+            image.setOnClickListener {
+                val videoInfo = VideoInfo(video.uri, video.name, video.duration, video.size, video.quality)
+                val intent=Intent(context, VideoPlayerActivity::class.java)
+                intent.putExtra("VIDEO_INFO", videoInfo)
+                context.startActivity(intent)
             }
         }
 
