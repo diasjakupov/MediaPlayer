@@ -47,7 +47,6 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
         _binding = FragmentVideoListBinding.inflate(inflater, container, false)
         rvShimmer = binding.videoShimmerRV
         rvShimmer.adapter = adapter
-        Log.e("TAG", "create fragment")
         rvShimmer.layoutManager = LinearLayoutManager(this.context)
         startShimmerRecyclerView()
         viewModel.getVideoList()
@@ -59,7 +58,6 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun getVideo() {
         lifecycleScope.launch{
             viewModel.videoList.observe(viewLifecycleOwner, { list ->
-                Log.e("TAG", "observe list")
                 if (list != null) {
                     recyclerViewState =
                         binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!

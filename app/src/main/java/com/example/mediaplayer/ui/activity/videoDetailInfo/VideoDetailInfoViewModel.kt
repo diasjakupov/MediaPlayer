@@ -42,6 +42,7 @@ class VideoDetailInfoViewModel @Inject constructor() : ViewModel() {
                     )
                 }
                 else if (format.getString(MediaFormat.KEY_MIME)!!.contains("x-subrip")) {
+                    Log.e("TAG", "$format")
                     data.add(
                         SubTitleInfo(format.getString(MediaFormat.KEY_LANGUAGE), "Subtitle Track")
                     )

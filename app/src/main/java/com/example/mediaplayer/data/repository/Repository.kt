@@ -23,9 +23,6 @@ class Repository @Inject constructor(
     private val videoProvider: VideoProvider,
     private val app: Application
 ) {
-    init {
-        Log.e("TAG", "create repository singleton")
-    }
 
 
     private val _videoList = MutableLiveData<ArrayList<Video>>()
