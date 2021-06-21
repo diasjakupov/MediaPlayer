@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/videoTrackItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fontFamily="@font/lato_bold"
     android:textColor="#FFFFFF"
-    android:theme="@style/customRadioBtn"
     android:textSize="20sp"
-    android:textStyle="bold"
-    android:id="@+id/videoTrackItem"
+    android:textStyle="normal"
+    android:theme="@style/customRadioBtn"
     tools:text="Track 1" />

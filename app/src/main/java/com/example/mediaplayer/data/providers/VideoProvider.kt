@@ -82,7 +82,7 @@ class VideoProvider @Inject constructor(
                     val quality = frame?.width?.compareNumber(frame.height) ?: 0
 
                     listOfVideo.add(Video(contentUri, title, time, thumbnail, size, quality))
-                    if (listOfVideo.size == 4) {
+                    if (listOfVideo.size == 10) {
                         emit(listOfVideo)
                         listOfVideo.clear()
                     }

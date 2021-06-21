@@ -30,12 +30,13 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Assertions
 import com.google.android.exoplayer2.util.Util
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_video_player.*
 import kotlinx.android.synthetic.main.video_player_controller.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class VideoPlayerActivity : AppCompatActivity() {
     //Initialize variables
     private lateinit var navController: NavController

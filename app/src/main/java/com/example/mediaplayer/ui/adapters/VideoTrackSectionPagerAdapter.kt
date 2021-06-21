@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 class VideoTrackSectionPagerAdapter(
-    private val data: Bundle,
     private val fragments: ArrayList<Fragment>,
     private val titles: ArrayList<String>,
     manager: FragmentManager
@@ -17,7 +16,6 @@ class VideoTrackSectionPagerAdapter(
     }
 
     override fun getItem(position: Int): Fragment {
-        fragments[position].arguments=data
         return fragments[position]
     }
 

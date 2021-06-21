@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="lightGray">#e5e5e5</color>
     <color name="orange">#F77F00</color>
+    <color name="darkOrange">#FF5100</color>
     <color name="darkGrey">#343a40</color>
     <color name="transparent">#00000000 </color>
     <color name="grey">#787878</color>
