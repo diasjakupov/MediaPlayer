@@ -1,4 +1,4 @@
-package com.example.mediaplayer.ui.fragments.videoTrackSelection
+package com.example.mediaplayer.ui.fragments.player.videoTrackSelection
 
 import android.os.Bundle
 import android.util.Log
@@ -8,21 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.fragment.app.activityViewModels
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.CustomFormatOfTrack
 import com.example.mediaplayer.ui.activity.player.ExoPlayerTrackSelection
-import com.google.android.exoplayer2.Format
+import com.example.mediaplayer.ui.fragments.player.PlayerViewModel
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.video_track_item.*
-import kotlinx.android.synthetic.main.video_track_section.*
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class VideoTrackTabFragment : Fragment() {
     private var args: ArrayList<CustomFormatOfTrack>? = null
+    private val viewModel by activityViewModels<PlayerViewModel>()
     @Inject lateinit var trackSelectorUtil: ExoPlayerTrackSelection
     @Inject lateinit var trackSelector: DefaultTrackSelector
     private lateinit var radioGroup: RadioGroup
@@ -38,15 +40,48 @@ class VideoTrackTabFragment : Fragment() {
 
         args?.forEach {custom->
             val radioBtn=RadioButton(requireContext())
-            radioBtn.text=custom.format.label
+            val title=if(custom.format.label == null){
+                Locale(custom.format.language!!).displayName
+            }else{
+                "${custom.format.label} - ${Locale(custom.format.language!!).displayName}"
+            }
+            radioBtn.text=title
+            radioBtn.id=custom.format.id!!.toInt()
             val index=custom.groupIndex
             radioBtn.setOnClickListener {
-                trackSelectorUtil.changeTrack(index, custom.selectedType)
+                changeTrack(index, custom)
             }
             radioGroup.addView(radioBtn)
         }
 
+        viewModel.videoLanguage.observe(viewLifecycleOwner, {
+            setCheckedBtn(it)
+        })
+        viewModel.videoSubtitle.observe(viewLifecycleOwner, {
+            setCheckedBtn(it)
+        })
+
         return rootView
+    }
+
+    private fun setCheckedBtn(format: CustomFormatOfTrack){
+        val childCount=radioGroup.childCount
+        for(i in (0 until childCount)){
+            val child=radioGroup.getChildAt(i)
+            if(child.id==format.format.id!!.toInt()){
+                (child as RadioButton).isChecked=true
+            }
+        }
+    }
+
+    private fun changeTrack(groupIndex:Int, customFormat: CustomFormatOfTrack){
+        trackSelectorUtil.changeTrack(groupIndex, customFormat.selectedType)
+        if(customFormat.selectedType== C.TRACK_TYPE_AUDIO){
+            viewModel.videoLanguage.value=customFormat
+        }else if(customFormat.selectedType==C.TRACK_TYPE_TEXT){
+            viewModel.videoSubtitle.value=customFormat
+        }
+
     }
 
     companion object{

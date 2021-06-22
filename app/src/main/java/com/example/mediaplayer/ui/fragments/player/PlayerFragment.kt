@@ -3,7 +3,6 @@ package com.example.mediaplayer.ui.fragments.player
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,14 +11,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.utils.DoubleClickListener
 import com.example.mediaplayer.ui.activity.player.ExoPlayerTrackSelection
-import com.example.mediaplayer.ui.fragments.videoTrackSelection.VideoTrackSelection
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -45,9 +45,12 @@ class PlayerFragment : Fragment() {
     private lateinit var fullScreenBtn: ImageView
     private lateinit var pauseBtn: ImageView
     @Inject lateinit var trackSelector: DefaultTrackSelector
+    @Inject lateinit var trackSelectorUtil: ExoPlayerTrackSelection
     private lateinit var audioSubtitleBtn: ImageView
     private var args: VideoInfo? = null
     private var isFullScreen: Boolean = true
+    private val viewModel by activityViewModels<PlayerViewModel>()
+    private lateinit var speedDialog: VideoSpeedFragment
 
 
     override fun onCreateView(
@@ -60,6 +63,7 @@ class PlayerFragment : Fragment() {
         progressBar = rootView.findViewById(R.id.progressBar)
         fullScreenBtn = rootView.findViewById(R.id.btnFullScreen)
         pauseBtn = rootView.findViewById(R.id.custom_pause)
+        speedDialog=VideoSpeedFragment()
         audioSubtitleBtn=rootView.findViewById(R.id.audioSubtitleBtn)
         args=arguments?.getParcelable("VIDEO_INFO")
         return rootView
@@ -68,39 +72,65 @@ class PlayerFragment : Fragment() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         //initialize player
-
-        player = SimpleExoPlayer.Builder(requireContext())
-            .setTrackSelector(trackSelector)
-            .build()
-
-        playerView.player = player
-
-        val defaultDataSource =
-            DefaultDataSourceFactory(
-                requireContext(),
-                Util.getUserAgent(requireContext(), "mediaplayer")
-            )
-
-        val mediaItem = MediaItem
-            .Builder()
-            .setUri(args!!.uri)
-            .build()
-
-        val mediaSource = ProgressiveMediaSource
-            .Factory(defaultDataSource)
-            .createMediaSource(mediaItem)
-
-        player.setMediaSource(mediaSource)
-        player.prepare()
-        player.playWhenReady = true
-        player.repeatMode = Player.REPEAT_MODE_ALL
+        initializePlayer()
 
         //initialize player btn with custom behaviour
         rewBtn = playerView.findViewById(R.id.custom_rew)
         ffwdBtn = playerView.findViewById(R.id.custom_ffwd)
 
         //add onClickListener on each btn
+        setOnClickListeners()
+
+        player.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(state: Int) {
+                super.onPlaybackStateChanged(state)
+                if (state == Player.STATE_BUFFERING) {
+                    progressBar.visibility = View.VISIBLE
+                }
+                else if (state == Player.STATE_READY) {
+                    //set settings for progressBar
+                    progressBar.visibility = View.GONE
+
+                    //setOnClickListeners on videostate-changing fragments
+                    audioSubtitleBtn.setOnClickListener {
+                        val action =
+                            PlayerFragmentDirections.actionPlayerFragmentToVideoTrackSelection()
+                        findNavController().navigate(action)
+                    }
+
+                    videoSpeedIcon.setOnClickListener {
+                        if (!speedDialog.isVisible) {
+                            speedDialog.show(childFragmentManager, "SHOW SPEED FRAGMENT")
+                        }
+                    }
+
+
+                    //update videoSpeed
+                    updateVideoSpeed()
+
+                    //set default audiotrack
+                    setDefaultAudioTrack()
+                }
+            }
+
+        })
+
+    }
+
+
+    private fun setDefaultAudioTrack(){
+        Log.e("TAG", "set default track")
+        val tracks=trackSelectorUtil.getTrackFormat(C.TRACK_TYPE_AUDIO)
+        val videoLanguage=viewModel.videoLanguage
+        if(videoLanguage.value == null){
+            videoLanguage.value=tracks.first()
+        }
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    private fun setOnClickListeners(){
         rewBtn.setOnClickListener(object : DoubleClickListener() {
             @SuppressLint("UseCompatLoadingForDrawables")
             override fun onDoubleClick(v: View) {
@@ -142,32 +172,41 @@ class PlayerFragment : Fragment() {
                 isFullScreen = true
             }
         }
-
-        player.addListener(object : Player.Listener {
-            override fun onPlaybackStateChanged(state: Int) {
-                super.onPlaybackStateChanged(state)
-                if (state == Player.STATE_BUFFERING) {
-                    progressBar.visibility = View.VISIBLE
-                } else if (state == Player.STATE_READY) {
-                    progressBar.visibility = View.GONE
-                    audioSubtitleBtn.setOnClickListener {
-                        val action=PlayerFragmentDirections.actionPlayerFragmentToVideoTrackSelection()
-                        findNavController().navigate(action)
-                    }
-
-                    videoSpeedIcon.setOnClickListener {
-                        val fragment=VideoSpeedFragment.Builder().setPlayer(player).build()
-                        fragment.show(childFragmentManager, "SHOW SPEED FRAGMENT")
-                    }
-                }
-            }
-        })
-
     }
 
+    private fun initializePlayer(){
+        player = SimpleExoPlayer.Builder(requireContext())
+            .setTrackSelector(trackSelector)
+            .build()
 
+        playerView.player = player
 
+        val defaultDataSource =
+            DefaultDataSourceFactory(
+                requireContext(),
+                Util.getUserAgent(requireContext(), "mediaplayer")
+            )
 
+        val mediaItem = MediaItem
+            .Builder()
+            .setUri(args!!.uri)
+            .build()
+
+        val mediaSource = ProgressiveMediaSource
+            .Factory(defaultDataSource)
+            .createMediaSource(mediaItem)
+
+        player.setMediaSource(mediaSource)
+        player.prepare()
+        player.playWhenReady = true
+        player.repeatMode = Player.REPEAT_MODE_ALL
+    }
+
+    private fun updateVideoSpeed(){
+        viewModel.videoSpeed.observe(viewLifecycleOwner, {
+            player.setPlaybackSpeed(it)
+        })
+    }
 
     private fun updateCurrentPosition(view: ImageView, update: Int) {
         view.alpha = 1.0f

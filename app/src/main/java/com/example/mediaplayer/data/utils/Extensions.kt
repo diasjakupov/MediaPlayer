@@ -22,6 +22,8 @@ fun Int.compareNumber(number:Int):Int{
     }
 }
 
+fun Double.round(decimals: Int = 2): Double = "%.${decimals}f".format(this).toDouble()
+
 abstract class DoubleClickListener : View.OnClickListener {
     private var lastClickTime: Long = 0
     override fun onClick(v: View) {

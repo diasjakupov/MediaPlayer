@@ -19,7 +19,7 @@
     </fragment>
     <dialog
         android:id="@+id/videoTrackSelection"
-        android:name="com.example.mediaplayer.ui.fragments.videoTrackSelection.VideoTrackSelection"
+        android:name="com.example.mediaplayer.ui.fragments.player.videoTrackSelection.VideoTrackSelection"
         android:label="fragment_video_track_selection"
         tools:layout="@layout/fragment_video_track_selection" />
 </navigation>

@@ -1,7 +1,6 @@
-package com.example.mediaplayer.ui.fragments.videoTrackSelection
+package com.example.mediaplayer.ui.fragments.player.videoTrackSelection
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +11,8 @@ import com.example.mediaplayer.R
 import com.example.mediaplayer.ui.activity.player.ExoPlayerTrackSelection
 import com.example.mediaplayer.ui.adapters.VideoTrackSectionPagerAdapter
 import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.Format
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.material.tabs.TabLayout
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
