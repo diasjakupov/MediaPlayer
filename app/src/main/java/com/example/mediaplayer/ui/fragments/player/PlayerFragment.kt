@@ -12,7 +12,6 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.mediaplayer.R
@@ -189,7 +188,7 @@ class PlayerFragment : Fragment() {
 
         val mediaItem = MediaItem
             .Builder()
-            .setUri(args!!.uri)
+            .setUri(args!!.contentUri)
             .build()
 
         val mediaSource = ProgressiveMediaSource

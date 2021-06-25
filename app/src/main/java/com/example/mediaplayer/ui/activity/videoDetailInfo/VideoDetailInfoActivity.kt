@@ -5,10 +5,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.Navigation
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mediaplayer.R
 import com.example.mediaplayer.databinding.ActivityVideoDetailInfoBinding
 import com.example.mediaplayer.ui.activity.player.VideoPlayerActivity
 import com.example.mediaplayer.ui.adapters.VideoItemInfoAdapter
@@ -38,7 +36,7 @@ class VideoDetailInfoActivity : AppCompatActivity() {
 
         binding.videoAudioTrackInfoRV.adapter = audioAdapter
         binding.videoAudioTrackInfoRV.layoutManager = LinearLayoutManager(this)
-        viewModel.getExtraDataList(this, args.video.uri)
+        viewModel.getExtraDataList(this, args.video.contentUri)
 
         viewModel.extraDataList.observe(this, {
             if (it != null) {

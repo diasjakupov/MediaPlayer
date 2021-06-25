@@ -2,14 +2,10 @@ package com.example.mediaplayer.ui.adapters.binding
 
 import android.annotation.SuppressLint
 import android.media.MediaMetadataRetriever
-import android.os.Build
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.models.VideoInfo
 import org.apache.commons.io.FileUtils
 import java.util.concurrent.TimeUnit
@@ -24,7 +20,7 @@ class VideoDetailBindingAdapter {
         @BindingAdapter("applyVideoImage")
         fun applyVideoImage(view:ImageView, video:VideoInfo){
             val retriever=MediaMetadataRetriever()
-            retriever.setDataSource(view.context, video.uri)
+            retriever.setDataSource(view.context, video.contentUri)
             Glide.with(view.context)
                 .load(retriever.frameAtTime)
                 .into(view)

@@ -8,10 +8,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Video(
-    val uri: Uri,
+    val contentUri: Uri,
     val name:String?,
     val duration: Int?,
     val thumbnail:Bitmap?,
     val size: Long?,
-    val quality: Int
+    val quality: Int,
+    val realPath:String
 ): Parcelable

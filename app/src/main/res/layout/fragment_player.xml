@@ -16,7 +16,7 @@
         app:resize_mode="fit"
         android:background="@color/black"
         app:hide_on_touch="true"
-        app:show_timeout="3000"
+        app:show_timeout="2000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

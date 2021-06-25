@@ -2,15 +2,12 @@ package com.example.mediaplayer.ui.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,13 +16,8 @@ import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.utils.VideoDiffUtils
 import com.example.mediaplayer.ui.activity.player.VideoPlayerActivity
-import com.example.mediaplayer.ui.fragments.videoList.VideoInfoFragment
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
 import dagger.hilt.android.qualifiers.ActivityContext
-import kotlinx.android.synthetic.main.activity_video_detail_info.view.*
-import kotlinx.android.synthetic.main.video_item_layout.view.*
-import org.apache.commons.io.FileUtils
-import org.w3c.dom.Text
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
@@ -34,6 +26,7 @@ class VideoListAdapter @Inject constructor(
     @ActivityContext val context:Context
 ) : RecyclerView.Adapter<VideoListAdapter.ViewHolder>() {
     var videoList = emptyList<Video>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
             R.layout.video_item_layout, parent, false
@@ -56,6 +49,7 @@ class VideoListAdapter @Inject constructor(
         result.dispatchUpdatesTo(this)
     }
 
+
     class ViewHolder(private val context: Context, itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         fun bind(video: Video) {
@@ -71,14 +65,14 @@ class VideoListAdapter @Inject constructor(
 
             //set up onClickListeners
             dots.setOnClickListener {
-                val videoInfo = VideoInfo(video.uri, video.name, video.duration, video.size, video.quality)
+                val videoInfo = VideoInfo(video.contentUri, video.name, video.duration, video.size, video.quality, video.realPath)
                 val action =
                     VideoListFragmentDirections.actionVideoListToVideoInfoFragment(videoInfo)
                 val navController=Navigation.findNavController(itemView)
                 navController.navigate(action)
             }
             image.setOnClickListener {
-                val videoInfo = VideoInfo(video.uri, video.name, video.duration, video.size, video.quality)
+                val videoInfo = VideoInfo(video.contentUri, video.name, video.duration, video.size, video.quality, video.realPath)
                 val intent=Intent(context, VideoPlayerActivity::class.java)
                 intent.putExtra("VIDEO_INFO", videoInfo)
                 context.startActivity(intent)
@@ -107,7 +101,6 @@ class VideoListAdapter @Inject constructor(
             }
             return "$formatHours:$formatMinutes:$formatSeconds"
         }
-
     }
 }
 

@@ -2,19 +2,19 @@ package com.example.mediaplayer.data.repository
 
 import android.Manifest
 import android.app.Application
+import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
 import com.example.mediaplayer.data.models.Video
+import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.providers.VideoProvider
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.collect
-import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.collections.ArrayList
 
 
@@ -24,12 +24,11 @@ class Repository @Inject constructor(
     private val app: Application
 ) {
 
-
     private val _videoList = MutableLiveData<ArrayList<Video>>()
     private var isParsingEnded=false
     val videoList: LiveData<ArrayList<Video>> = _videoList
 
-    private fun checkPermission(): Boolean {
+    private fun checkReadingPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             app.applicationContext,
             Manifest.permission.READ_EXTERNAL_STORAGE
@@ -37,8 +36,18 @@ class Repository @Inject constructor(
                 PackageManager.PERMISSION_GRANTED
     }
 
-    suspend fun getVideoList(isForced: Boolean = false) {
-        if (checkPermission()) {
+    private fun checkWritingPermission(): Boolean {
+        val permission=ContextCompat.checkSelfPermission(
+            app.applicationContext,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) ==
+                PackageManager.PERMISSION_GRANTED
+        Log.e("TAG", "perm $permission")
+        return permission
+    }
+
+    suspend fun getVideoList() {
+        if (checkReadingPermission()) {
             val temporaryVideosStorage= arrayListOf<Video>()
             if(!isParsingEnded){
                 videoProvider.getVideoList().collect {list->
@@ -47,6 +56,14 @@ class Repository @Inject constructor(
                 }
                 isParsingEnded=true
             }
+        }
+    }
+
+    fun deleteVideoByUri(video: VideoInfo): IntentSender?{
+        if(checkWritingPermission()){
+            return videoProvider.deleteVideoByUri(video)
+        }else{
+            return null
         }
     }
 

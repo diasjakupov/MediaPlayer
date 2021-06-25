@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,7 +32,7 @@ import kotlin.math.abs
 @AndroidEntryPoint
 class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
 
-    private val viewModel: VideoListViewModel by viewModels()
+    private val viewModel: VideoListViewModel by activityViewModels()
     private var _binding: FragmentVideoListBinding? = null
     private lateinit var recyclerViewState: Parcelable
 
@@ -62,7 +63,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
                     recyclerViewState =
                         binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!
                     adapter.updateDataList(list.toList())
-                    binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState);
+                    binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState)
                     disableShimmerRecyclerView()
                 }
             })
@@ -101,10 +102,10 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
                 getVideo()
             }
             //Clear query
-            searchView.setQuery("", false);
+            searchView.setQuery("", false)
 
             //Collapse the action view
-            searchView.onActionViewCollapsed();
+            searchView.onActionViewCollapsed()
         }
         searchView.setOnQueryTextListener(this)
     }
