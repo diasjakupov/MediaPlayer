@@ -7,7 +7,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class CustomFormatOfTrack (
-    val format: Format,
+    val language: String?,
+    val label: String?,
+    val id: String?,
     val groupIndex: Int,
     val selectedType: Int
 ) : Parcelable

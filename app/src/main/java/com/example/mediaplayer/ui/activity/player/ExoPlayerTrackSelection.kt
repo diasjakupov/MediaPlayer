@@ -4,10 +4,13 @@ import android.util.Log
 import com.example.mediaplayer.data.models.CustomFormatOfTrack
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Format
+import com.google.android.exoplayer2.source.TrackGroup
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.util.Assertions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class ExoPlayerTrackSelection
@@ -43,18 +46,34 @@ class ExoPlayerTrackSelection
                 for (trackGroupIndex in (0 until trackGroupArray.length)){
                     val trackGroupItem=trackGroupArray.get(trackGroupIndex)
                     val format=trackGroupItem.getFormat(0)
-                    track.add(CustomFormatOfTrack(format, trackGroupIndex, selectedType))
+                    track.add(CustomFormatOfTrack(format.language, format.label, format.id, trackGroupIndex, selectedType))
                 }
             }
         }
         return track
     }
 
-
-    private fun isSupportedTrackType(trackType: Int): Boolean {
-        return when (trackType) {
-            C.TRACK_TYPE_AUDIO,C.TRACK_TYPE_TEXT -> true
-            else -> false
+    suspend fun getSelectionOverride(selectedType: Int): CustomFormatOfTrack? {
+        return withContext(Dispatchers.IO){
+            var trackGroup: TrackGroup? =null
+            var override: DefaultTrackSelector.SelectionOverride? =null
+            val mappedTrackInfo = Assertions.checkNotNull(trackSelector.currentMappedTrackInfo)
+            for (i in (0 until mappedTrackInfo.rendererCount)) {
+                val trackType = mappedTrackInfo.getRendererType(i)
+                if (trackType == selectedType) {
+                    val trackGroupArray = mappedTrackInfo.getTrackGroups(i)
+                    override = trackSelector.parameters.getSelectionOverride(i, trackGroupArray)
+                    if(override != null){
+                        trackGroup=trackGroupArray.get(override.groupIndex)
+                    }
+                }
+            }
+            if(trackGroup!=null){
+                val format=trackGroup.getFormat(0)
+                CustomFormatOfTrack(format.language, format.label, format.id, override?.groupIndex ?: 0, selectedType)
+            }else{
+                null
+            }
         }
     }
 }

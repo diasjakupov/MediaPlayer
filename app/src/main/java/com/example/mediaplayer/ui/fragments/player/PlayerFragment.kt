@@ -89,6 +89,8 @@ class PlayerFragment : Fragment() {
                     progressBar.visibility = View.VISIBLE
                 }
                 else if (state == Player.STATE_READY) {
+                    viewModel.videoStatus.value=state
+
                     //set settings for progressBar
                     progressBar.visibility = View.GONE
 
@@ -113,14 +115,12 @@ class PlayerFragment : Fragment() {
                     setDefaultAudioTrack()
                 }
             }
-
         })
 
     }
 
 
     private fun setDefaultAudioTrack(){
-        Log.e("TAG", "set default track")
         val tracks=trackSelectorUtil.getTrackFormat(C.TRACK_TYPE_AUDIO)
         val videoLanguage=viewModel.videoLanguage
         if(videoLanguage.value == null){

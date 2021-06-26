@@ -45,6 +45,14 @@
         app:layout_constraintTop_toBottomOf="@+id/videoThumbnail"
         tools:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a ty" />
 
+    <View
+        android:id="@+id/viewedDuration"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/videoThumbnail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/videoDuration"
         android:layout_width="wrap_content"
@@ -58,7 +66,7 @@
         android:paddingBottom="2dp"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/videoThumbnail"
+        app:layout_constraintBottom_toTopOf="@+id/viewedDuration"
         app:layout_constraintEnd_toEndOf="@+id/videoThumbnail"
         tools:text="2:13:00" />
 

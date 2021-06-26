@@ -12,4 +12,5 @@ class PlayerViewModel @Inject constructor(): ViewModel() {
     var videoSpeed=MutableLiveData(1.0f)
     var videoLanguage=MutableLiveData<CustomFormatOfTrack>()
     var videoSubtitle=MutableLiveData<CustomFormatOfTrack>()
+    var videoStatus=MutableLiveData<Int>()
 }

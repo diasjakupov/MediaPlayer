@@ -35,7 +35,6 @@ class VideoListViewModel @Inject constructor(
         repository.getVideoList()
     }
 
-
     fun updateVideoList(video:VideoInfo){
         val newList=videoList.value?.filter {
             it.contentUri != video.contentUri

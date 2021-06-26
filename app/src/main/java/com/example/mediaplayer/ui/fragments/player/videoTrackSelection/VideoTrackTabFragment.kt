@@ -40,13 +40,13 @@ class VideoTrackTabFragment : Fragment() {
 
         args?.forEach {custom->
             val radioBtn=RadioButton(requireContext())
-            val title=if(custom.format.label == null){
-                Locale(custom.format.language!!).displayName
+            val title=if(custom.label == null){
+                Locale(custom.language!!).displayName
             }else{
-                "${custom.format.label} - ${Locale(custom.format.language!!).displayName}"
+                "${custom.label} - ${Locale(custom.language!!).displayName}"
             }
             radioBtn.text=title
-            radioBtn.id=custom.format.id!!.toInt()
+            radioBtn.id=custom.id!!.toInt()
             val index=custom.groupIndex
             radioBtn.setOnClickListener {
                 changeTrack(index, custom)
@@ -68,7 +68,7 @@ class VideoTrackTabFragment : Fragment() {
         val childCount=radioGroup.childCount
         for(i in (0 until childCount)){
             val child=radioGroup.getChildAt(i)
-            if(child.id==format.format.id!!.toInt()){
+            if(child.id==format.id!!.toInt()){
                 (child as RadioButton).isChecked=true
             }
         }

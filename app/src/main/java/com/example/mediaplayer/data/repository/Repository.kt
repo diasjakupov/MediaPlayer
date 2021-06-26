@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.mediaplayer.data.db.dao.VideoDao
 import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.providers.VideoProvider
@@ -21,7 +22,8 @@ import kotlin.collections.ArrayList
 @ActivityRetainedScoped
 class Repository @Inject constructor(
     private val videoProvider: VideoProvider,
-    private val app: Application
+    private val app: Application,
+    private val videoDao: VideoDao
 ) {
 
     private val _videoList = MutableLiveData<ArrayList<Video>>()
@@ -67,4 +69,5 @@ class Repository @Inject constructor(
         }
     }
 
+    fun updateOrCreateVideoEntity(){}
 }
