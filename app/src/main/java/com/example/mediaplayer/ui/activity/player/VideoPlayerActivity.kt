@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.utils.DoubleClickListener
+import com.example.mediaplayer.data.utils.ifContains
 import com.example.mediaplayer.ui.fragments.player.PlayerViewModel
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
@@ -45,7 +46,6 @@ class VideoPlayerActivity : AppCompatActivity() {
     //Initialize variables
     private lateinit var navController: NavController
     @Inject lateinit var trackSelectorUtil: ExoPlayerTrackSelection
-    private val viewModel: PlayerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,17 +57,6 @@ class VideoPlayerActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         navController=findNavController(R.id.playerNavHostFragment)
         navController.setGraph(R.navigation.player_nav, intent.extras)
-        getSelectionTrack()
     }
 
-    private fun getSelectionTrack(){
-        viewModel.videoStatus.observe(this@VideoPlayerActivity, {
-            lifecycleScope.launch(Dispatchers.IO) {
-                if (it == Player.STATE_READY) {
-                    val format = trackSelectorUtil.getSelectionOverride(C.TRACK_TYPE_TEXT)
-                    Log.e("TAG", "$format")
-                }
-            }
-        })
-    }
 }

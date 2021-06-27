@@ -13,6 +13,6 @@ data class VideoEntity(
     val viewedTime: Long?,
     val wholeDuration: Long?,
     val realPath:String,
-    @Embedded(prefix = "audio_") val selectedAudioTrack: CustomFormatOfTrack,
-    @Embedded(prefix = "subtitle") val selectedSubtitleTrack: CustomFormatOfTrack
+    @Embedded(prefix = "audio_") val selectedAudioTrack: CustomFormatOfTrack?,
+    @Embedded(prefix = "subtitle") val selectedSubtitleTrack: CustomFormatOfTrack?
 )

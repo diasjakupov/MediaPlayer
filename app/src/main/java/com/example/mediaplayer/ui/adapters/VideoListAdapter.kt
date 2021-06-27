@@ -79,8 +79,8 @@ class VideoListAdapter @Inject constructor(
             }
         }
 
-        private fun convertDuration(data: Int): String {
-            val initialSeconds = TimeUnit.MILLISECONDS.toSeconds(data.toLong()).toInt()
+        private fun convertDuration(data: Long): String {
+            val initialSeconds = TimeUnit.MILLISECONDS.toSeconds(data).toInt()
             val hours = (initialSeconds / 3600)
             val minutes = abs(((hours * 3600 - initialSeconds) / 60))
             val seconds = abs((hours * 3600 + minutes * 60 - initialSeconds))

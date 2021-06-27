@@ -1,9 +1,11 @@
 package com.example.mediaplayer.data.utils
 
+import android.net.Uri
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.example.mediaplayer.data.db.entites.VideoEntity
 
 fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>){
     observe(lifecycleOwner, object : Observer<T> {
@@ -20,6 +22,16 @@ fun Int.compareNumber(number:Int):Int{
     }else{
         this
     }
+}
+
+fun List<VideoEntity>.ifContains(contentUri: Uri): Boolean{
+    var find=false
+    this.forEach {
+        if(Uri.parse(it.contentUri).path==contentUri.path){
+            find=true
+        }
+    }
+    return find
 }
 
 fun Double.round(decimals: Int = 2): Double = "%.${decimals}f".format(this).toDouble()

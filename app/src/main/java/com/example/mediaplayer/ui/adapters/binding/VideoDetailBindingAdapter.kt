@@ -29,8 +29,8 @@ class VideoDetailBindingAdapter {
         @SuppressLint("SetTextI18n")
         @JvmStatic
         @BindingAdapter("presentDurationWithUnits")
-        fun presentDuration(view: TextView, data: Int) {
-            val initialSeconds = TimeUnit.MILLISECONDS.toSeconds(data.toLong()).toInt()
+        fun presentDuration(view: TextView, data: Long) {
+            val initialSeconds = TimeUnit.MILLISECONDS.toSeconds(data).toInt()
             val hours = (initialSeconds / 3600)
             val minutes = abs(((hours * 3600 - initialSeconds) / 60))
             val seconds = abs((hours * 3600 + minutes * 60 - initialSeconds))

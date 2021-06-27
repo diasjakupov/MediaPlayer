@@ -71,8 +71,7 @@ class VideoProvider @Inject constructor(
                     val retriever = MediaMetadataRetriever()
                     retriever.setDataSource(application.applicationContext, contentUri)
                     val time =
-                        retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                            ?.toInt()
+                        retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong()
 
                     val size = cursor.getLong(sizeColumn)
                     val frame = retriever.frameAtTime

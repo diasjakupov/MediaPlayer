@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 data class Video(
     val contentUri: Uri,
     val name:String?,
-    val duration: Int?,
+    val duration: Long?,
     val thumbnail:Bitmap?,
     val size: Long?,
     val quality: Int,
