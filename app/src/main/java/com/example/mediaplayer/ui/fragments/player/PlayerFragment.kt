@@ -2,6 +2,7 @@ package com.example.mediaplayer.ui.fragments.player
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.data.utils.DoubleClickListener
 import com.example.mediaplayer.data.utils.ifContains
+import com.example.mediaplayer.data.utils.observeOnce
 import com.example.mediaplayer.ui.activity.player.ExoPlayerTrackSelection
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
@@ -87,6 +89,7 @@ class PlayerFragment : Fragment() {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
                 if (state == Player.STATE_BUFFERING) {
+                    viewModel.videoStatus.value = state
                     progressBar.visibility = View.VISIBLE
                 } else if (state == Player.STATE_READY) {
                     viewModel.videoStatus.value = state
@@ -107,7 +110,6 @@ class PlayerFragment : Fragment() {
                         }
                     }
 
-
                     //update videoSpeed
                     updateVideoSpeed()
 
@@ -118,21 +120,41 @@ class PlayerFragment : Fragment() {
         })
 
         //checking if video is in the database or if it should be updated
+        checkVideo()
         return rootView
     }
 
     private fun setDefaultAudioTrack() {
-        val tracks = trackSelectorUtil.getTrackFormat(C.TRACK_TYPE_AUDIO)
-        val videoLanguage = viewModel.videoLanguage
-        if (videoLanguage.value == null) {
-            try {
-                val track = tracks.first()
-                videoLanguage.value = track
-            } catch (e: Exception) {
-                e.printStackTrace()
+        viewModel.viewedVideoList.observeOnce(viewLifecycleOwner, {
+            val audio = trackSelectorUtil.getTrackFormat(C.TRACK_TYPE_AUDIO)
+            if (!it.ifContains(args!!.contentUri)) {
+                val videoLanguage = viewModel.videoLanguage
+                if (videoLanguage.value == null) {
+                    try {
+                        val track = audio.first()
+                        videoLanguage.value = track
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            } else {
+                val videoFromDb =
+                    it.find { video -> Uri.parse(video.contentUri).path == args!!.contentUri.path }
+                if (videoFromDb?.selectedAudioTrack != null) {
+                    viewModel.videoLanguage.value = videoFromDb.selectedAudioTrack
+                } else {
+                    try {
+                        val track = audio.first()
+                        viewModel.videoLanguage.value = track
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                if (videoFromDb?.selectedSubtitleTrack != null) {
+                    viewModel.videoSubtitle.value = videoFromDb.selectedSubtitleTrack
+                }
             }
-
-        }
+        })
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -230,26 +252,53 @@ class PlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        Log.e("TAG", "PAUSE")
+        Log.e("TAG", "pause")
+        updateVideoEntity()
     }
 
     private fun checkVideo() {
-        viewModel.viewedVideoList.observe(viewLifecycleOwner, {
+        viewModel.viewedVideoList.observeOnce(viewLifecycleOwner, {
             if (it.isNullOrEmpty() || !it.ifContains(args!!.contentUri)) {
                 updateVideoEntity()
+            } else {
+                val videoFromDb =
+                    it.find { video -> Uri.parse(video.contentUri).path == args!!.contentUri.path }
+                if (videoFromDb != null) {
+                    videoFromDb.viewedTime?.let { viewed -> player.seekTo(viewed) }
+                    viewModel.videoStatus.observeOnce(viewLifecycleOwner, {
+                        videoFromDb.selectedAudioTrack?.let { selectedAudio ->
+                            trackSelectorUtil.changeTrack(
+                                index = selectedAudio.groupIndex,
+                                selectedType = selectedAudio.selectedType
+                            )
+                        }
+                        videoFromDb.selectedSubtitleTrack?.let { selectedSubtitle ->
+                            trackSelectorUtil.changeTrack(
+                                index = selectedSubtitle.groupIndex,
+                                selectedType = selectedSubtitle.selectedType
+                            )
+                        }
+                    })
+                }
             }
         })
     }
 
     private fun updateVideoEntity() {
         viewModel.videoStatus.observe(viewLifecycleOwner, {
-            lifecycleScope.launch(Dispatchers.IO) {
-                if (it == Player.STATE_READY) {
-                    val audio=trackSelectorUtil.getSelectionOverride(C.TRACK_TYPE_AUDIO)
+            if (it == Player.STATE_READY) {
+                lifecycleScope.launch {
+                    val audio = trackSelectorUtil.getSelectionOverride(C.TRACK_TYPE_AUDIO)
                     val subtitle = trackSelectorUtil.getSelectionOverride(C.TRACK_TYPE_TEXT)
-                    viewModel.updateOrCreateVideoEntity(args!!, audio, subtitle, player.currentPosition)
+                    viewModel.updateOrCreateVideoEntity(
+                        args!!,
+                        audio,
+                        subtitle,
+                        player.currentPosition
+                    )
                 }
             }
+
         })
     }
 }

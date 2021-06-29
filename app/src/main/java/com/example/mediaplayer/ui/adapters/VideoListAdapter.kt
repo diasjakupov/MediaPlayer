@@ -2,11 +2,14 @@ package com.example.mediaplayer.ui.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -49,7 +52,6 @@ class VideoListAdapter @Inject constructor(
         result.dispatchUpdatesTo(this)
     }
 
-
     class ViewHolder(private val context: Context, itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         fun bind(video: Video) {
@@ -57,12 +59,21 @@ class VideoListAdapter @Inject constructor(
             val image=itemView.findViewById<ImageView>(R.id.videoThumbnail)
             val dots=itemView.findViewById<ImageView>(R.id.videoItemDots)
             val duration=itemView.findViewById<TextView>(R.id.videoDuration)
+            val viewedDuration=itemView.findViewById<ImageView>(R.id.viewedDuration)
+            val width=Resources.getSystem().displayMetrics.widthPixels
+
+            val widthOfView=if(video.viewedTime != 0L) {
+                (video.viewedTime?.toDouble()?.div(video.duration!!.toDouble())
+                    ?.times(width.toDouble()))?.toInt()
+            } else{
+                1
+            }
 
             //bind data to view
             Glide.with(context).load(video.thumbnail).into(image)
             title.text = video.name.toString()
             duration.text = convertDuration(video.duration!!)
-
+            viewedDuration.layoutParams.width=widthOfView!!.toInt()
             //set up onClickListeners
             dots.setOnClickListener {
                 val videoInfo = VideoInfo(video.contentUri, video.name, video.duration, video.size, video.quality, video.realPath)

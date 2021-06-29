@@ -28,6 +28,8 @@ class VideoListViewModel @Inject constructor(
     private val repository: Repository,
     app: Application
 ) : AndroidViewModel(app) {
+
+    val viewedVideoList=repository.viewedVideoList
     val videoList = repository.videoList as MutableLiveData
     val searchedList = MutableLiveData<List<Video>?>()
 
@@ -40,6 +42,14 @@ class VideoListViewModel @Inject constructor(
             it.contentUri != video.contentUri
         }
         videoList.value= newList as ArrayList<Video>?
+
+
+    }
+
+    fun deleteVideoFromDb(video: VideoInfo){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.deleteVideoEntity(video.contentUri)
+        }
     }
 
     fun searchVideoList(search: String) {
@@ -55,7 +65,7 @@ class VideoListViewModel @Inject constructor(
         }
     }
 
-    fun deleteVideoByVideo(video: VideoInfo): IntentSender? {
+    fun deleteVideoFromStorage(video: VideoInfo): IntentSender? {
         return repository.deleteVideoByUri(video)
     }
 }

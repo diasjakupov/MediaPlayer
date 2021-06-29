@@ -16,4 +16,7 @@ interface VideoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdateVideoEntity(entity: VideoEntity)
+
+    @Query("DELETE FROM viewed_video WHERE contentUri =:uri")
+    suspend fun deleteVideoByUri(uri:String)
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.example.mediaplayer.data.db.entites.VideoEntity
+import com.example.mediaplayer.data.models.Video
 
 fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>){
     observe(lifecycleOwner, object : Observer<T> {
@@ -32,6 +33,16 @@ fun List<VideoEntity>.ifContains(contentUri: Uri): Boolean{
         }
     }
     return find
+}
+
+fun ArrayList<Video>.updateWithViewedTime(list: List<VideoEntity>): ArrayList<Video>{
+    val updatedList= this
+    updatedList.forEach {
+        if(list.ifContains(it.contentUri)){
+            it.viewedTime=list.find { entity-> Uri.parse(entity.contentUri).path==it.contentUri.path }?.viewedTime
+        }
+    }
+    return updatedList
 }
 
 fun Double.round(decimals: Int = 2): Double = "%.${decimals}f".format(this).toDouble()

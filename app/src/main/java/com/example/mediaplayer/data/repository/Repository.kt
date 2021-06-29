@@ -76,4 +76,8 @@ class Repository @Inject constructor(
     suspend fun updateOrCreateVideoEntity(videoEntity: VideoEntity){
         localDataSource.insertOrUpdateVideoEntity(videoEntity)
     }
+
+    suspend fun deleteVideoEntity(uri: Uri){
+        localDataSource.deleteVideoEntity(uri.toString())
+    }
 }

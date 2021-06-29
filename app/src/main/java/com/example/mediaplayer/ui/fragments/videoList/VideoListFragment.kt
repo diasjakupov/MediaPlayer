@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.Video
 import com.example.mediaplayer.data.utils.observeOnce
+import com.example.mediaplayer.data.utils.updateWithViewedTime
 import com.example.mediaplayer.databinding.FragmentVideoListBinding
 import com.example.mediaplayer.ui.adapters.VideoListAdapter
 import com.todkars.shimmer.ShimmerRecyclerView
@@ -59,13 +60,15 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun getVideo() {
         lifecycleScope.launch{
             viewModel.videoList.observe(viewLifecycleOwner, { list ->
-                if (list != null) {
-                    recyclerViewState =
-                        binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!
-                    adapter.updateDataList(list.toList())
-                    binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState)
-                    disableShimmerRecyclerView()
-                }
+                viewModel.viewedVideoList.observe(viewLifecycleOwner, { viewedList->
+                    if (list != null) {
+                        recyclerViewState =
+                            binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!
+                        adapter.updateDataList(list.updateWithViewedTime(viewedList))
+                        binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                        disableShimmerRecyclerView()
+                    }
+                })
             })
         }
     }

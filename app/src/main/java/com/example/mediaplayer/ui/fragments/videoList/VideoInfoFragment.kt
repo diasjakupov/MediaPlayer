@@ -2,8 +2,6 @@ package com.example.mediaplayer.ui.fragments.videoList
 
 import android.app.Activity.RESULT_OK
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +13,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mediaplayer.R
-import com.example.mediaplayer.data.models.VideoInfo
 import com.example.mediaplayer.databinding.FragmentVideoInfoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_video_info.*
 
 @AndroidEntryPoint
 class VideoInfoFragment : BottomSheetDialogFragment() {
@@ -39,6 +35,7 @@ class VideoInfoFragment : BottomSheetDialogFragment() {
             if(it.resultCode == RESULT_OK){
                 Toast.makeText(this.context, "File was successfully deleted", Toast.LENGTH_SHORT).show()
                 viewModel.updateVideoList(args.video)
+                viewModel.deleteVideoFromDb(args.video)
                 dismiss()
             }else{
                 Toast.makeText(this.context, "Failed to delete this file", Toast.LENGTH_SHORT).show()
@@ -53,7 +50,7 @@ class VideoInfoFragment : BottomSheetDialogFragment() {
             findNavController().navigate(action)
         }
         binding.videoDeleteItem.setOnClickListener {
-           val intentSender=viewModel.deleteVideoByVideo(args.video)
+           val intentSender=viewModel.deleteVideoFromStorage(args.video)
             intentSender?.let {
                 intentSenderLauncher.launch(
                     IntentSenderRequest.Builder(it).build()
