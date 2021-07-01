@@ -1,4 +1,4 @@
-package com.example.mediaplayer.data.models
+package com.example.mediaplayer.data.models.video
 
 data class SubTitleInfo(
     override val language: String?,

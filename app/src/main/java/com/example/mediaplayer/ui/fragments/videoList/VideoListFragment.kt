@@ -1,34 +1,26 @@
 package com.example.mediaplayer.ui.fragments.videoList
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.media.Image
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.mediaplayer.R
-import com.example.mediaplayer.data.models.Video
-import com.example.mediaplayer.data.utils.observeOnce
+import com.example.mediaplayer.data.models.video.Video
 import com.example.mediaplayer.data.utils.updateWithViewedTime
 import com.example.mediaplayer.databinding.FragmentVideoListBinding
 import com.example.mediaplayer.ui.adapters.VideoListAdapter
 import com.todkars.shimmer.ShimmerRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.math.abs
 
 @AndroidEntryPoint
 class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
@@ -41,6 +33,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     lateinit var adapter: VideoListAdapter
     private lateinit var rvShimmer: ShimmerRecyclerView
     private val binding get() = _binding!!
+    private lateinit var videoListObserver: Observer<ArrayList<Video>>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,18 +51,20 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun getVideo() {
-        lifecycleScope.launch{
-            viewModel.videoList.observe(viewLifecycleOwner, { list ->
-                viewModel.viewedVideoList.observe(viewLifecycleOwner, { viewedList->
-                    if (list != null) {
-                        recyclerViewState =
-                            binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!
-                        adapter.updateDataList(list.updateWithViewedTime(viewedList))
-                        binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState)
-                        disableShimmerRecyclerView()
-                    }
-                })
+        videoListObserver= Observer {  list ->
+            viewModel.viewedVideoList.observe(viewLifecycleOwner, { viewedList->
+                if (list != null) {
+                    recyclerViewState =
+                        binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!
+                    adapter.updateDataList(list.updateWithViewedTime(viewedList))
+                    binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                    disableShimmerRecyclerView()
+                }
             })
+        }
+
+        lifecycleScope.launch{
+            viewModel.videoList.observe(viewLifecycleOwner, videoListObserver)
         }
     }
 
@@ -80,6 +75,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
             if (list != null) {
                 adapter.updateDataList(list)
                 disableShimmerRecyclerView()
+                viewModel.videoList.removeObserver(videoListObserver)
             }
         })
     }

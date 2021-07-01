@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.example.mediaplayer.data.db.entites.VideoEntity
-import com.example.mediaplayer.data.models.Video
+import com.example.mediaplayer.data.models.video.Video
 
 fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>){
     observe(lifecycleOwner, object : Observer<T> {

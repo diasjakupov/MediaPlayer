@@ -10,11 +10,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import com.example.mediaplayer.data.db.dao.VideoDao
 import com.example.mediaplayer.data.db.datasource.LocalDataSource
 import com.example.mediaplayer.data.db.entites.VideoEntity
-import com.example.mediaplayer.data.models.Video
-import com.example.mediaplayer.data.models.VideoInfo
+import com.example.mediaplayer.data.models.audio.Audio
+import com.example.mediaplayer.data.models.video.Video
+import com.example.mediaplayer.data.models.video.VideoInfo
+import com.example.mediaplayer.data.providers.AudioProvider
 import com.example.mediaplayer.data.providers.VideoProvider
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.collect
@@ -25,14 +26,20 @@ import kotlin.collections.ArrayList
 @ActivityRetainedScoped
 class Repository @Inject constructor(
     private val videoProvider: VideoProvider,
+    private val audioProvider: AudioProvider,
     private val app: Application,
     private val localDataSource: LocalDataSource
 ) {
 
     private val _videoList = MutableLiveData<ArrayList<Video>>()
-    private var isParsingEnded=false
-    val viewedVideoList=localDataSource.getVideoList().asLiveData()
     val videoList: LiveData<ArrayList<Video>> = _videoList
+    private var isVideoParsingEnded=false
+
+    private val _audioList = MutableLiveData<ArrayList<Audio>>()
+    val audioList: LiveData<ArrayList<Audio>> = _audioList
+    private var isAudioParsingEnded=false
+
+    val viewedVideoList=localDataSource.getVideoList().asLiveData()
 
     private fun checkReadingPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -54,20 +61,33 @@ class Repository @Inject constructor(
 
     suspend fun getVideoList() {
         if (checkReadingPermission()) {
-            val temporaryVideosStorage= arrayListOf<Video>()
-            if(!isParsingEnded){
+            val temporaryVideoStorage= arrayListOf<Video>()
+            if(!isVideoParsingEnded){
                 videoProvider.getVideoList().collect {list->
-                    temporaryVideosStorage.addAll(list)
-                    _videoList.postValue(temporaryVideosStorage)
+                    temporaryVideoStorage.addAll(list)
+                    _videoList.postValue(temporaryVideoStorage)
                 }
-                isParsingEnded=true
+                isVideoParsingEnded=true
+            }
+        }
+    }
+
+    suspend fun getAudioList() {
+        if (checkReadingPermission()) {
+            val temporaryAudioStorage= arrayListOf<Audio>()
+            if(!isAudioParsingEnded){
+                audioProvider.getAudioList().collect {list->
+                    temporaryAudioStorage.addAll(list)
+                    _audioList.postValue(temporaryAudioStorage)
+                }
+                isAudioParsingEnded=true
             }
         }
     }
 
     fun deleteVideoByUri(video: VideoInfo): IntentSender?{
         if(checkWritingPermission()){
-            return videoProvider.deleteVideoByUri(video)
+            return videoProvider.deleteMediaByUri(video.contentUri)
         }else{
             return null
         }

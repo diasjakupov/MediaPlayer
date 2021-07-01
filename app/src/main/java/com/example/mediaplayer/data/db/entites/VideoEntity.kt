@@ -1,10 +1,9 @@
 package com.example.mediaplayer.data.db.entites
 
-import android.net.Uri
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.mediaplayer.data.models.CustomFormatOfTrack
+import com.example.mediaplayer.data.models.video.CustomFormatOfTrack
 
 @Entity(tableName = "viewed_video")
 data class VideoEntity(

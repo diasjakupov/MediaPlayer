@@ -1,13 +1,8 @@
 package com.example.mediaplayer.ui.activity.player
 
-import android.util.Log
-import com.example.mediaplayer.data.models.CustomFormatOfTrack
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.Format
+import com.example.mediaplayer.data.models.video.CustomFormatOfTrack
 import com.google.android.exoplayer2.source.TrackGroup
-import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.util.Assertions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

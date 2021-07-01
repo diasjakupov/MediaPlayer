@@ -1,24 +1,14 @@
 package com.example.mediaplayer.ui.fragments.videoList
 
-import android.Manifest
 import android.app.Application
 import android.content.IntentSender
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
-import android.util.Log
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
-import com.example.mediaplayer.data.models.Video
-import com.example.mediaplayer.data.models.VideoInfo
-import com.example.mediaplayer.data.providers.VideoProvider
+import com.example.mediaplayer.data.models.video.Video
+import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -37,7 +27,7 @@ class VideoListViewModel @Inject constructor(
         repository.getVideoList()
     }
 
-    fun updateVideoList(video:VideoInfo){
+    fun updateVideoList(video: VideoInfo){
         val newList=videoList.value?.filter {
             it.contentUri != video.contentUri
         }

@@ -5,14 +5,13 @@ import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediaplayer.data.models.AudioInfo
-import com.example.mediaplayer.data.models.CustomMediaItemFormat
-import com.example.mediaplayer.data.models.SubTitleInfo
+import com.example.mediaplayer.data.models.video.AudioInfo
+import com.example.mediaplayer.data.models.video.CustomMediaItemFormat
+import com.example.mediaplayer.data.models.video.SubTitleInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

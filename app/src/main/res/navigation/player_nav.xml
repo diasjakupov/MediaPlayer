@@ -15,7 +15,7 @@
             app:destination="@id/videoTrackSelection" />
         <argument
             android:name="videoInfo"
-            app:argType="com.example.mediaplayer.data.models.VideoInfo" />
+            app:argType="com.example.mediaplayer.data.models.video.VideoInfo" />
     </fragment>
     <dialog
         android:id="@+id/videoTrackSelection"

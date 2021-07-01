@@ -1,12 +1,11 @@
 package com.example.mediaplayer.ui.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mediaplayer.R
-import com.example.mediaplayer.data.models.CustomMediaItemFormat
+import com.example.mediaplayer.data.models.video.CustomMediaItemFormat
 import kotlinx.android.synthetic.main.video_audio_subtitle_track_item.view.*
 import javax.inject.Inject
 

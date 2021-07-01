@@ -1,7 +1,7 @@
 package com.example.mediaplayer.data.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.mediaplayer.data.models.Video
+import com.example.mediaplayer.data.models.video.Video
 
 class VideoDiffUtils(
     private val oldList: List<Video>,

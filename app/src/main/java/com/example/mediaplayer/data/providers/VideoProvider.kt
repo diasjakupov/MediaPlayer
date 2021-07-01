@@ -1,34 +1,38 @@
 package com.example.mediaplayer.data.providers
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.ContentUris
 import android.content.IntentSender
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
+import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import androidx.documentfile.provider.DocumentFile
-import androidx.room.util.FileUtil
+import android.util.Size
 import com.example.mediaplayer.R
-import com.example.mediaplayer.data.models.Video
-import com.example.mediaplayer.data.models.VideoInfo
+import com.example.mediaplayer.data.models.audio.Audio
+import com.example.mediaplayer.data.models.video.Video
+import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.compareNumber
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
 
 @ActivityRetainedScoped
 class VideoProvider @Inject constructor(
-    private val application: Application
-) {
-    private var selection: String? = null
-    private var selectionArgs = emptyArray<String>()
-    private var sortedOrder = "${MediaStore.Video.Media.DISPLAY_NAME} ASC"
-    private val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    private val application: Application,
+): MediaProvider {
+    override val selection: String? = null
+    override val selectionArgs = emptyArray<String>()
+    override val sortedOrder = "${MediaStore.Video.Media.DISPLAY_NAME} ASC"
+    override val collection: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         MediaStore.Video.Media.getContentUri(
             MediaStore.VOLUME_EXTERNAL
         )
@@ -36,7 +40,7 @@ class VideoProvider @Inject constructor(
         MediaStore.Video.Media.EXTERNAL_CONTENT_URI
     }
 
-    private fun provideProjection(): Array<String> {
+    override fun provideMediaProjection(): Array<String> {
         return arrayOf(
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.DISPLAY_NAME,
@@ -49,17 +53,17 @@ class VideoProvider @Inject constructor(
         val listOfVideo = arrayListOf<Video>()
         val query = application.contentResolver.query(
             collection,
-            provideProjection(),
+            provideMediaProjection(),
             selection,
             selectionArgs,
             sortedOrder
         )
         query?.use { cursor ->
-            val data = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
-            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
-            val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
-            val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
             try {
+                val data = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
+                val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
+                val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
                 while (cursor.moveToNext()) {
                     val idValue = cursor.getLong(idColumn)
                     val title = cursor.getString(titleColumn)
@@ -71,10 +75,19 @@ class VideoProvider @Inject constructor(
                     val retriever = MediaMetadataRetriever()
                     retriever.setDataSource(application.applicationContext, contentUri)
                     val time =
-                        retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong()
+                        retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                            ?.toLong()
 
                     val size = cursor.getLong(sizeColumn)
-                    val frame = retriever.frameAtTime
+                    val frame = try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            ThumbnailUtils.createVideoThumbnail(File(dataValue), Size(720, 480), null)
+                        } else {
+                            ThumbnailUtils.createVideoThumbnail(dataValue, MediaStore.Video.Thumbnails.MICRO_KIND)
+                        };
+                    }catch (e:Exception){
+                        null
+                    }
                     val thumbnail = if (frame != null) {
                         frame
                     } else {
@@ -106,21 +119,22 @@ class VideoProvider @Inject constructor(
         }
     }
 
-    fun deleteVideoByUri(video: VideoInfo): IntentSender? {
-        return try{
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
-                MediaStore.createDeleteRequest(application.contentResolver, listOf(video.contentUri)).intentSender
-            }else {
-                application.contentResolver.delete(video.contentUri, null, null)
+    override fun deleteMediaByUri(uri: Uri): IntentSender? {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                MediaStore.createDeleteRequest(
+                    application.contentResolver,
+                    listOf(uri)
+                ).intentSender
+            } else {
+                application.contentResolver.delete(uri, null, null)
                 null
             }
-        }catch (e: SecurityException){
+        } catch (e: SecurityException) {
             Log.e("TAG", "security exception caught")
             null
         }
     }
-
-
 }
 
 

@@ -1,4 +1,4 @@
-package com.example.mediaplayer.data.models
+package com.example.mediaplayer.data.models.video
 
 import android.os.Parcelable
 import com.google.android.exoplayer2.Format

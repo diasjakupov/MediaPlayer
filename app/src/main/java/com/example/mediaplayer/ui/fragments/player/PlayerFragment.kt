@@ -16,7 +16,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.mediaplayer.R
-import com.example.mediaplayer.data.models.VideoInfo
+import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.DoubleClickListener
 import com.example.mediaplayer.data.utils.ifContains
 import com.example.mediaplayer.data.utils.observeOnce
@@ -32,7 +32,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.video_player_controller.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
