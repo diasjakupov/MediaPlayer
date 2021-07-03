@@ -12,5 +12,6 @@ data class VideoInfo(
     val duration: Long?,
     val size: Long?,
     val quality:Int,
-    val realPath:String
+    val realPath:String,
+    var viewedTime: Long?,
 ): Parcelable

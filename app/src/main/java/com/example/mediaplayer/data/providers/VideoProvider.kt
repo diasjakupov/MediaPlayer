@@ -1,34 +1,29 @@
 package com.example.mediaplayer.data.providers
 
-import android.annotation.SuppressLint
+
 import android.app.Application
 import android.content.ContentUris
 import android.content.IntentSender
-import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
-import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import android.util.Size
-import com.example.mediaplayer.R
-import com.example.mediaplayer.data.models.audio.Audio
-import com.example.mediaplayer.data.models.video.Video
+
 import com.example.mediaplayer.data.models.video.VideoInfo
+
 import com.example.mediaplayer.data.utils.compareNumber
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import kotlinx.coroutines.Dispatchers
+
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
-import java.io.File
+
 import javax.inject.Inject
 
 
 @ActivityRetainedScoped
 class VideoProvider @Inject constructor(
     private val application: Application,
-): MediaProvider {
+) : MediaProvider {
     override val selection: String? = null
     override val selectionArgs = emptyArray<String>()
     override val sortedOrder = "${MediaStore.Video.Media.DISPLAY_NAME} ASC"
@@ -50,7 +45,7 @@ class VideoProvider @Inject constructor(
     }
 
     suspend fun getVideoList() = flow {
-        val listOfVideo = arrayListOf<Video>()
+        val listOfVideo = arrayListOf<VideoInfo>()
         val query = application.contentResolver.query(
             collection,
             provideMediaProjection(),
@@ -65,6 +60,7 @@ class VideoProvider @Inject constructor(
                 val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
                 val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
                 while (cursor.moveToNext()) {
+
                     val idValue = cursor.getLong(idColumn)
                     val title = cursor.getString(titleColumn)
                     val contentUri = ContentUris.withAppendedId(
@@ -72,35 +68,27 @@ class VideoProvider @Inject constructor(
                         idValue
                     )
                     val dataValue = cursor.getString(data)
+
                     val retriever = MediaMetadataRetriever()
                     retriever.setDataSource(application.applicationContext, contentUri)
+
                     val time =
                         retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
                             ?.toLong()
 
                     val size = cursor.getLong(sizeColumn)
-                    val frame = try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            ThumbnailUtils.createVideoThumbnail(File(dataValue), Size(720, 480), null)
-                        } else {
-                            ThumbnailUtils.createVideoThumbnail(dataValue, MediaStore.Video.Thumbnails.MICRO_KIND)
-                        };
-                    }catch (e:Exception){
-                        null
-                    }
-                    val thumbnail = if (frame != null) {
-                        frame
-                    } else {
-                        BitmapFactory.decodeResource(application.resources, R.drawable.ic_error)
-                    }
-                    val quality = frame?.width?.compareNumber(frame.height) ?: 0
+
+
+                    val width=retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toInt()
+                    val height=retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toInt()
+
+                    val quality = width?.compareNumber(height) ?: 0
 
                     listOfVideo.add(
-                        Video(
+                        VideoInfo(
                             contentUri,
                             title,
                             time,
-                            thumbnail,
                             size,
                             quality,
                             dataValue,

@@ -1,6 +1,5 @@
 package com.example.mediaplayer.data.providers
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.ContentUris
 import android.content.IntentSender
@@ -9,7 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import com.example.mediaplayer.data.models.audio.Audio
+import com.example.mediaplayer.data.models.audio.AudioInfo
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -34,12 +33,14 @@ class AudioProvider @Inject constructor(
         return arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.DISPLAY_NAME,
-            MediaStore.Audio.Media.SIZE
+            MediaStore.Audio.Media.SIZE,
+            MediaStore.Audio.Albums.ALBUM_ID,
+            MediaStore.Audio.Media.DATA
         )
     }
 
     suspend fun getAudioList() = flow {
-        val listOfAudio = arrayListOf<Audio>()
+        val listOfAudio = arrayListOf<AudioInfo>()
         val query = application.contentResolver.query(
             collection,
             provideMediaProjection(),
@@ -53,12 +54,20 @@ class AudioProvider @Inject constructor(
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
                 val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
                 val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
+                val albumColumn=cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
+                val dataColumn=cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
                 while (cursor.moveToNext()) {
                     val idValue = cursor.getLong(idColumn)
                     val title = cursor.getString(titleColumn)
+                    val albumId = cursor.getLong(albumColumn)
                     val contentUri = ContentUris.withAppendedId(
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         idValue
+                    )
+                    val dataValue=cursor.getString(dataColumn)
+                    val albumUri=ContentUris.withAppendedId(
+                        MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                        albumId
                     )
                     val retriever = MediaMetadataRetriever()
                     retriever.setDataSource(application.applicationContext, contentUri)
@@ -67,8 +76,15 @@ class AudioProvider @Inject constructor(
                             ?.toLong()
 
                     val size = cursor.getLong(sizeColumn)
+                    val author=retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
 
-                    listOfAudio.add(Audio(contentUri, title, time, size))
+                    listOfAudio.add(AudioInfo(
+                        contentUri, title, time, size, author, albumUri, dataValue))
+
+                    if (listOfAudio.size == 10) {
+                        emit(listOfAudio)
+                        listOfAudio.clear()
+                    }
                 }
                 emit(listOfAudio)
             } catch (e: Exception) {

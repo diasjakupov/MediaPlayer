@@ -12,8 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import com.example.mediaplayer.data.db.datasource.LocalDataSource
 import com.example.mediaplayer.data.db.entites.VideoEntity
-import com.example.mediaplayer.data.models.audio.Audio
-import com.example.mediaplayer.data.models.video.Video
+import com.example.mediaplayer.data.models.audio.AudioInfo
 import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.providers.AudioProvider
 import com.example.mediaplayer.data.providers.VideoProvider
@@ -31,12 +30,12 @@ class Repository @Inject constructor(
     private val localDataSource: LocalDataSource
 ) {
 
-    private val _videoList = MutableLiveData<ArrayList<Video>>()
-    val videoList: LiveData<ArrayList<Video>> = _videoList
+    private val _videoList = MutableLiveData<ArrayList<VideoInfo>>()
+    val videoList: LiveData<ArrayList<VideoInfo>> = _videoList
     private var isVideoParsingEnded=false
 
-    private val _audioList = MutableLiveData<ArrayList<Audio>>()
-    val audioList: LiveData<ArrayList<Audio>> = _audioList
+    private val _audioList = MutableLiveData<ArrayList<AudioInfo>>()
+    val audioList: LiveData<ArrayList<AudioInfo>> = _audioList
     private var isAudioParsingEnded=false
 
     val viewedVideoList=localDataSource.getVideoList().asLiveData()
@@ -61,7 +60,7 @@ class Repository @Inject constructor(
 
     suspend fun getVideoList() {
         if (checkReadingPermission()) {
-            val temporaryVideoStorage= arrayListOf<Video>()
+            val temporaryVideoStorage= arrayListOf<VideoInfo>()
             if(!isVideoParsingEnded){
                 videoProvider.getVideoList().collect {list->
                     temporaryVideoStorage.addAll(list)
@@ -74,7 +73,7 @@ class Repository @Inject constructor(
 
     suspend fun getAudioList() {
         if (checkReadingPermission()) {
-            val temporaryAudioStorage= arrayListOf<Audio>()
+            val temporaryAudioStorage= arrayListOf<AudioInfo>()
             if(!isAudioParsingEnded){
                 audioProvider.getAudioList().collect {list->
                     temporaryAudioStorage.addAll(list)

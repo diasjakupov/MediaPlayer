@@ -2,18 +2,17 @@ package com.example.mediaplayer.ui.fragments.videoList
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mediaplayer.R
-import com.example.mediaplayer.data.models.video.Video
+import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.updateWithViewedTime
 import com.example.mediaplayer.databinding.FragmentVideoListBinding
 import com.example.mediaplayer.ui.adapters.VideoListAdapter
@@ -33,7 +32,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     lateinit var adapter: VideoListAdapter
     private lateinit var rvShimmer: ShimmerRecyclerView
     private val binding get() = _binding!!
-    private lateinit var videoListObserver: Observer<ArrayList<Video>>
+    private var isSearching = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,21 +49,20 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
         return binding.root
     }
 
+    
     private fun getVideo() {
-        videoListObserver= Observer {  list ->
-            viewModel.viewedVideoList.observe(viewLifecycleOwner, { viewedList->
-                if (list != null) {
-                    recyclerViewState =
-                        binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!
-                    adapter.updateDataList(list.updateWithViewedTime(viewedList))
-                    binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState)
-                    disableShimmerRecyclerView()
-                }
-            })
-        }
-
         lifecycleScope.launch{
-            viewModel.videoList.observe(viewLifecycleOwner, videoListObserver)
+            viewModel.videoList.observe(viewLifecycleOwner, {  list ->
+                viewModel.viewedVideoList.observe(viewLifecycleOwner, { viewedList->
+                    if (list != null && !isSearching) {
+                        recyclerViewState =
+                            binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!
+                        adapter.updateDataList(list.updateWithViewedTime(viewedList))
+                        binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                        disableShimmerRecyclerView()
+                    }
+                })
+            })
         }
     }
 
@@ -72,11 +70,12 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
         startShimmerRecyclerView()
         viewModel.searchVideoList(search)
         viewModel.searchedList.observe(viewLifecycleOwner, { list ->
-            if (list != null) {
-                adapter.updateDataList(list)
-                disableShimmerRecyclerView()
-                viewModel.videoList.removeObserver(videoListObserver)
-            }
+            viewModel.viewedVideoList.observe(viewLifecycleOwner, { viewedList->
+                if (list != null) {
+                    adapter.updateDataList(list.updateWithViewedTime(viewedList))
+                    disableShimmerRecyclerView()
+                }
+            })
         })
     }
 
@@ -97,6 +96,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
         icon?.setTint(ContextCompat.getColor(requireContext(), R.color.searchIconColor))
         searchCloseButton?.setImageDrawable(icon)
         searchCloseButton?.setOnClickListener {
+            isSearching=false
             if (searchView.query.isNotEmpty()) {
                 getVideo()
             }
@@ -127,6 +127,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (!query.isNullOrBlank()) {
             searchVideoList(query)
+            isSearching=true
         }
         return true
     }
@@ -134,4 +135,6 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onQueryTextChange(newText: String?): Boolean {
         return true
     }
+
+
 }

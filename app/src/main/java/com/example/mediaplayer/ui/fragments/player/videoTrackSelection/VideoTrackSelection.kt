@@ -49,6 +49,6 @@ class VideoTrackSelection : DialogFragment() {
     }
 
     private fun initTitles(): ArrayList<String>{
-        return arrayListOf("Audio", "Subtitles")
+        return arrayListOf("AudioInfo", "Subtitles")
     }
 }

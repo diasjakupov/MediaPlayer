@@ -1,11 +1,10 @@
 package com.example.mediaplayer.data.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.mediaplayer.data.models.video.Video
 
-class VideoDiffUtils(
-    private val oldList: List<Video>,
-    private val newList: List<Video>
+class MediaDiffUtils <T> (
+    private val oldList: List<T>,
+    private val newList: List<T>
 ): DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size
@@ -16,12 +15,10 @@ class VideoDiffUtils(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val res=newList[newItemPosition].contentUri.path==oldList[oldItemPosition].contentUri.path
-        return res
+        return newList[newItemPosition] === oldList[oldItemPosition]
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val res=newList[newItemPosition].name==oldList[oldItemPosition].name
-        return res
+        return newList[newItemPosition] == oldList[oldItemPosition]
     }
 }

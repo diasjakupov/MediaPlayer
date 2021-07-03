@@ -30,6 +30,7 @@
     <color name="searchIconColor">@color/darkGrey</color>
     <color name="unplayed_color">@color/darkGrey</color>
     <color name="buffered_color">@color/grey</color>
+    <color name="audioAuthor">@color/grey</color>
     <color name="video_btn">@color/grey</color>
     <color name="played_color">@color/orange</color>
 </resources>

@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediaplayer.data.models.video.AudioInfo
+import com.example.mediaplayer.data.models.video.VideoAudioInfo
 import com.example.mediaplayer.data.models.video.CustomMediaItemFormat
 import com.example.mediaplayer.data.models.video.SubTitleInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +37,7 @@ class VideoDetailInfoViewModel @Inject constructor() : ViewModel() {
                 Log.e("TAG", "$format")
                 if (format.getString(MediaFormat.KEY_MIME)!!.contains("audio")) {
                     data.add(
-                        AudioInfo(format.getString(MediaFormat.KEY_LANGUAGE), "Audio Track")
+                        VideoAudioInfo(format.getString(MediaFormat.KEY_LANGUAGE), "AudioInfo Track")
                     )
                 }
                 else if (format.getString(MediaFormat.KEY_MIME)!!.contains("x-subrip")) {

@@ -3,7 +3,6 @@ package com.example.mediaplayer.ui.fragments.videoList
 import android.app.Application
 import android.content.IntentSender
 import androidx.lifecycle.*
-import com.example.mediaplayer.data.models.video.Video
 import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +20,7 @@ class VideoListViewModel @Inject constructor(
 
     val viewedVideoList=repository.viewedVideoList
     val videoList = repository.videoList as MutableLiveData
-    val searchedList = MutableLiveData<List<Video>?>()
+    val searchedList = MutableLiveData<ArrayList<VideoInfo>?>()
 
     fun getVideoList() = viewModelScope.launch(Dispatchers.IO) {
         repository.getVideoList()
@@ -31,9 +30,7 @@ class VideoListViewModel @Inject constructor(
         val newList=videoList.value?.filter {
             it.contentUri != video.contentUri
         }
-        videoList.value= newList as ArrayList<Video>?
-
-
+        videoList.value= newList as ArrayList<VideoInfo>?
     }
 
     fun deleteVideoFromDb(video: VideoInfo){
@@ -46,10 +43,8 @@ class VideoListViewModel @Inject constructor(
         if (search.isNotEmpty()) {
             val data = videoList.value?.filter {
                 it.name?.toLowerCase(Locale.ROOT)!!.contains(search.toLowerCase(Locale.ROOT))
-            }
-            if (data != null) {
-                searchedList.value = data
-            }
+            } as ArrayList
+            searchedList.value = data
         } else {
             searchedList.value = videoList.value
         }
