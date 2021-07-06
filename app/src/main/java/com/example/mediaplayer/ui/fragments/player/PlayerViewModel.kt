@@ -26,7 +26,7 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO){
             val entity=VideoEntity(
                 videoInfo.contentUri.toString(),
-                videoInfo.name, time,
+                videoInfo.title, time,
                 videoInfo.duration,
                 videoInfo.realPath,
                 audio,

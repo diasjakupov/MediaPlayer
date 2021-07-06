@@ -2,22 +2,37 @@ package com.example.mediaplayer.ui.adapters
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.media.MediaMetadataRetriever
+import android.media.ThumbnailUtils
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.request.RequestOptions
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.MediaDiffUtils
+import com.example.mediaplayer.data.utils.doAsync
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
 import dagger.hilt.android.qualifiers.ActivityContext
+import kotlinx.coroutines.delay
+import java.io.File
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
@@ -51,6 +66,7 @@ class VideoListAdapter @Inject constructor(
 
     class ViewHolder(private val context: Context, itemView: View) :
         RecyclerView.ViewHolder(itemView) {
+
         fun bind(video: VideoInfo) {
             val title = itemView.findViewById<TextView>(R.id.videoTitle)
             val image = itemView.findViewById<ImageView>(R.id.videoThumbnail)
@@ -65,16 +81,21 @@ class VideoListAdapter @Inject constructor(
             } else {
                 1
             }
-
-
             //bind data to view
-            Glide.with(context)
+            Glide
+                .with(context)
+                .asBitmap()
                 .load(video.contentUri)
-                .thumbnail()
-                .error(ContextCompat.getDrawable(context, R.drawable.ic_error))
+                .error(R.drawable.ic_error)
                 .into(image)
 
-            title.text = video.name.toString()
+
+
+            title.text = video.title.toString()
+            title.doAsync {
+                delay(3000)
+                it.isSelected=true
+            }
             duration.text = convertDuration(video.duration!!)
             viewedDuration.layoutParams.width = widthOfView!!.toInt()
             //set up onClickListeners
@@ -85,12 +106,10 @@ class VideoListAdapter @Inject constructor(
                 navController.navigate(action)
             }
             image.setOnClickListener {
-//                val intent = Intent(context, VideoPlayerActivity::class.java)
-//                intent.putExtra("VIDEO_INFO", video)
-//                context.startActivity(intent)
-                val action=VideoListFragmentDirections.actionVideoListToVideoPlayerActivity(Bundle().apply {
-                    putParcelable("VIDEO_INFO", video)
-                })
+                val action =
+                    VideoListFragmentDirections.actionVideoListToVideoPlayerActivity(Bundle().apply {
+                        putParcelable("VIDEO_INFO", video)
+                    })
                 val navController = Navigation.findNavController(itemView)
                 navController.navigate(action)
             }

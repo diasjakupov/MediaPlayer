@@ -6,12 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mediaplayer.R
+import com.example.mediaplayer.databinding.FragmentAudioListBinding
+import com.example.mediaplayer.databinding.FragmentVideoListBinding
 import com.example.mediaplayer.ui.adapters.AudioListAdapter
-import com.todkars.shimmer.ShimmerRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_audio_list.view.*
 import kotlinx.coroutines.launch
@@ -21,33 +24,45 @@ import javax.inject.Inject
 class AudioListFragment : Fragment() {
     private val viewModel: AudioListViewModel by activityViewModels()
     @Inject lateinit var adapter: AudioListAdapter
-    private lateinit var rvShimmer: ShimmerRecyclerView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
+    private var _binding: FragmentAudioListBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val rootView=inflater.inflate(R.layout.fragment_audio_list, container, false)
+        _binding=FragmentAudioListBinding.inflate(inflater, container, false)
         viewModel.getAudioList()
-        rvShimmer=rootView.audioShimmerRV
-        rvShimmer.adapter=adapter
-        rvShimmer.layoutManager=LinearLayoutManager(this.context)
-        rvShimmer.showShimmer()
+        recyclerView=binding.audioShimmerRV
+        recyclerView.adapter=adapter
+        progressBar=binding.loadingProgressBar
+        recyclerView.layoutManager=LinearLayoutManager(this.context)
+        showProgressBar()
         getAudio()
-        return rootView
+        return binding.root
     }
 
     private fun getAudio(){
         lifecycleScope.launch {
             viewModel.audioList.observe(viewLifecycleOwner, {
-                Log.e("TAG", "$it")
+                Log.e("TAG", "${it.last()}")
                 if(it != null){
                     adapter.updateDataList(it)
-                    rvShimmer.hideShimmer()
+                    hideProgressBar()
                 }
             })
         }
+    }
+
+    private fun showProgressBar(){
+        progressBar.visibility=View.VISIBLE
+    }
+
+    private fun hideProgressBar(){
+        progressBar.visibility=View.INVISIBLE
     }
 
 }

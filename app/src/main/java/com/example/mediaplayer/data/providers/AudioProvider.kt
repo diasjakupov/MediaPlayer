@@ -79,9 +79,9 @@ class AudioProvider @Inject constructor(
                     val author=retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
 
                     listOfAudio.add(AudioInfo(
-                        contentUri, title, time, size, author, albumUri, dataValue))
+                        contentUri, title, time, size, author, albumUri, dataValue, retriever.embeddedPicture))
 
-                    if (listOfAudio.size == 10) {
+                    if (listOfAudio.size == 20) {
                         emit(listOfAudio)
                         listOfAudio.clear()
                     }

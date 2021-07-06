@@ -2,21 +2,20 @@ package com.example.mediaplayer.ui.fragments.videoList
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mediaplayer.R
-import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.updateWithViewedTime
 import com.example.mediaplayer.databinding.FragmentVideoListBinding
 import com.example.mediaplayer.ui.adapters.VideoListAdapter
-import com.todkars.shimmer.ShimmerRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,25 +25,26 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private val viewModel: VideoListViewModel by activityViewModels()
     private var _binding: FragmentVideoListBinding? = null
-    private lateinit var recyclerViewState: Parcelable
 
     @Inject
     lateinit var adapter: VideoListAdapter
-    private lateinit var rvShimmer: ShimmerRecyclerView
+    private lateinit var recyclerView: RecyclerView
     private val binding get() = _binding!!
     private var isSearching = false
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentVideoListBinding.inflate(inflater, container, false)
-        rvShimmer = binding.videoShimmerRV
-        rvShimmer.adapter = adapter
-        rvShimmer.layoutManager = LinearLayoutManager(this.context)
-        startShimmerRecyclerView()
+        recyclerView = binding.videoShimmerRV
+        recyclerView.adapter = adapter
+        progressBar=binding.loadingProgressBar
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
         viewModel.getVideoList()
         setHasOptionsMenu(true)
+        showProgressBar()
         getVideo()
         return binding.root
     }
@@ -55,11 +55,9 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
             viewModel.videoList.observe(viewLifecycleOwner, {  list ->
                 viewModel.viewedVideoList.observe(viewLifecycleOwner, { viewedList->
                     if (list != null && !isSearching) {
-                        recyclerViewState =
-                            binding.videoShimmerRV.layoutManager?.onSaveInstanceState()!!
+                        hideProgressBar()
                         adapter.updateDataList(list.updateWithViewedTime(viewedList))
-                        binding.videoShimmerRV.layoutManager?.onRestoreInstanceState(recyclerViewState)
-                        disableShimmerRecyclerView()
+
                     }
                 })
             })
@@ -67,13 +65,13 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun searchVideoList(search: String) {
-        startShimmerRecyclerView()
         viewModel.searchVideoList(search)
+        showProgressBar()
         viewModel.searchedList.observe(viewLifecycleOwner, { list ->
             viewModel.viewedVideoList.observe(viewLifecycleOwner, { viewedList->
                 if (list != null) {
+                    hideProgressBar()
                     adapter.updateDataList(list.updateWithViewedTime(viewedList))
-                    disableShimmerRecyclerView()
                 }
             })
         })
@@ -116,14 +114,6 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
         searchIcon.setImageDrawable(icon)
     }
 
-    private fun startShimmerRecyclerView() {
-        rvShimmer.showShimmer()
-    }
-
-    private fun disableShimmerRecyclerView() {
-        rvShimmer.hideShimmer()
-    }
-
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (!query.isNullOrBlank()) {
             searchVideoList(query)
@@ -136,5 +126,12 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
         return true
     }
 
+    private fun showProgressBar(){
+        progressBar.visibility=View.VISIBLE
+    }
+
+    private fun hideProgressBar(){
+        progressBar.visibility=View.INVISIBLE
+    }
 
 }

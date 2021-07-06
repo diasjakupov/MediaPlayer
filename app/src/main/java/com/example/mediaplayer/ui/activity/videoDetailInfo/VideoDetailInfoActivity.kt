@@ -31,7 +31,7 @@ class VideoDetailInfoActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         setSupportActionBar(customToolBar)
-        supportActionBar?.title = args.video.name
+        supportActionBar?.title = args.video.title
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.videoAudioTrackInfoRV.adapter = audioAdapter

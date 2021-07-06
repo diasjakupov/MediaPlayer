@@ -1,15 +1,18 @@
 package com.example.mediaplayer.data.utils
 
+import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.example.mediaplayer.data.db.entites.VideoEntity
 import com.example.mediaplayer.data.models.video.VideoInfo
+import kotlinx.coroutines.*
 
 
-fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>){
+fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
     observe(lifecycleOwner, object : Observer<T> {
         override fun onChanged(t: T?) {
             removeObserver(this)
@@ -18,32 +21,46 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
     })
 }
 
-fun Int.compareNumber(number:Int?):Int{
-    if(number==null){
+fun View.doAsync(
+    backgroundWork: suspend (view:View) -> Unit,
+) {
+    val job = CoroutineScope(Dispatchers.Main)
+    job.launch {
+        if (isActive) {
+            backgroundWork(this@doAsync)
+        }
+    }
+
+}
+
+
+fun Int.compareNumber(number: Int?): Int {
+    if (number == null) {
         return 0
     }
-    return if(this>number){
+    return if (this > number) {
         number
-    }else{
+    } else {
         this
     }
 }
 
-fun List<VideoEntity>.ifContains(contentUri: Uri): Boolean{
-    var find=false
+fun List<VideoEntity>.ifContains(contentUri: Uri): Boolean {
+    var find = false
     this.forEach {
-        if(Uri.parse(it.contentUri).path==contentUri.path){
-            find=true
+        if (Uri.parse(it.contentUri).path == contentUri.path) {
+            find = true
         }
     }
     return find
 }
 
-fun ArrayList<VideoInfo>.updateWithViewedTime(list: List<VideoEntity>): ArrayList<VideoInfo>{
-    val updatedList= this
+fun ArrayList<VideoInfo>.updateWithViewedTime(list: List<VideoEntity>): ArrayList<VideoInfo> {
+    val updatedList = this
     updatedList.forEach {
-        if(list.ifContains(it.contentUri)){
-            it.viewedTime=list.find { entity-> Uri.parse(entity.contentUri).path==it.contentUri.path }?.viewedTime
+        if (list.ifContains(it.contentUri)) {
+            it.viewedTime =
+                list.find { entity -> Uri.parse(entity.contentUri).path == it.contentUri.path }?.viewedTime
         }
     }
     return updatedList
@@ -61,7 +78,9 @@ abstract class DoubleClickListener : View.OnClickListener {
         }
         lastClickTime = clickTime
     }
+
     abstract fun onDoubleClick(v: View)
+
     companion object {
         private const val DOUBLE_CLICK_TIME_DELTA: Long = 300 //milliseconds
     }

@@ -10,6 +10,7 @@
         android:id="@+id/audioImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:background="@color/videoThumbnailBackground"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,14 +23,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="16dp"
-        android:ellipsize="end"
-        android:maxLines="1"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit ="marquee_forever"
+        android:scrollHorizontally="true"
         android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when"
         android:textColor="@color/titleColor"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/imageView7"
         app:layout_constraintStart_toEndOf="@+id/audioImage"
-        app:layout_constraintTop_toTopOf="@+id/audioImage" />
+        app:layout_constraintTop_toTopOf="@+id/audioImage"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/audioAuthor"

@@ -2,10 +2,14 @@ package com.example.mediaplayer.ui.adapters
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
@@ -23,9 +27,12 @@ import com.example.mediaplayer.data.models.audio.AudioInfo
 import com.example.mediaplayer.data.models.video.VideoAudioInfo
 import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.MediaDiffUtils
+import com.example.mediaplayer.data.utils.doAsync
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
 import dagger.hilt.android.qualifiers.ActivityContext
+import kotlinx.coroutines.delay
 import java.io.File
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
@@ -33,7 +40,7 @@ import kotlin.math.abs
 class AudioListAdapter @Inject constructor(
     @ActivityContext val context: Context
 ) : RecyclerView.Adapter<AudioListAdapter.ViewHolder>() {
-    var videoList = emptyList<AudioInfo>()
+    var audioList = arrayListOf<AudioInfo>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -43,33 +50,36 @@ class AudioListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(videoList[position])
+        holder.bind(audioList[position])
     }
 
     override fun getItemCount(): Int {
-        return videoList.size
+        return audioList.size
     }
 
     fun updateDataList(newList: List<AudioInfo>) {
-        val videoDiffUtil = MediaDiffUtils(videoList, newList)
-        val result = DiffUtil.calculateDiff(videoDiffUtil, true)
-        videoList = newList
+        val result = DiffUtil.calculateDiff(MediaDiffUtils(audioList, newList))
+        audioList=newList as ArrayList<AudioInfo>
         result.dispatchUpdatesTo(this)
     }
 
-    class ViewHolder(private val context: Context, itemView: View) :
+    class ViewHolder(private val context: Context,
+                     itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         fun bind(audio: AudioInfo) {
             val image=itemView.findViewById<ImageView>(R.id.audioImage)
             val title=itemView.findViewById<TextView>(R.id.audioTitle)
             val author=itemView.findViewById<TextView>(R.id.audioAuthor)
 
-
-
-//            Glide.with(context)
-//                .load(ThumbnailUtils.createAudioThumbnail(File(audio.realPAth!!), Size(480, 480), null))
-//                .error(ContextCompat.getDrawable(context, R.drawable.ic_error))
-//                .into(image)
+            Glide
+                .with(context)
+                .load(audio.embeddedPicture)
+                .error(R.drawable.ic_music)
+                .into(image)
+            title.doAsync {
+                delay(3000)
+                it.isSelected=true
+            }
             title.text=audio.title
             author.text=audio.author
         }

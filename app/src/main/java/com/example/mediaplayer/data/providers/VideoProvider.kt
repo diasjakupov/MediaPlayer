@@ -5,17 +5,21 @@ import android.app.Application
 import android.content.ContentUris
 import android.content.IntentSender
 import android.media.MediaMetadataRetriever
+import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Size
 
 import com.example.mediaplayer.data.models.video.VideoInfo
 
 import com.example.mediaplayer.data.utils.compareNumber
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
 import javax.inject.Inject
 

@@ -42,7 +42,7 @@ class VideoListViewModel @Inject constructor(
     fun searchVideoList(search: String) {
         if (search.isNotEmpty()) {
             val data = videoList.value?.filter {
-                it.name?.toLowerCase(Locale.ROOT)!!.contains(search.toLowerCase(Locale.ROOT))
+                it.title?.toLowerCase(Locale.ROOT)!!.contains(search.toLowerCase(Locale.ROOT))
             } as ArrayList
             searchedList.value = data
         } else {
