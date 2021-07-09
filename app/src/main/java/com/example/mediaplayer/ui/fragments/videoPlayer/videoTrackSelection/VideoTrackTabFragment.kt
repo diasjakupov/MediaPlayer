@@ -1,4 +1,4 @@
-package com.example.mediaplayer.ui.fragments.player.videoTrackSelection
+package com.example.mediaplayer.ui.fragments.videoPlayer.videoTrackSelection
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,7 +11,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.video.CustomFormatOfTrack
 import com.example.mediaplayer.ui.activity.player.ExoPlayerTrackSelection
-import com.example.mediaplayer.ui.fragments.player.PlayerViewModel
+import com.example.mediaplayer.ui.fragments.videoPlayer.PlayerViewModel
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import dagger.hilt.android.AndroidEntryPoint

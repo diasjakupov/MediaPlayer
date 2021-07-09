@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.mediaplayer">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".MyApplication"
@@ -15,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MediaPlayer"
         tools:ignore="AllowBackup">
+        <activity android:name=".ui.activity.player.AudioPlayerActivity"></activity>
         <activity
             android:name=".ui.activity.player.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|layoutDirection" />
@@ -26,6 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".ui.activity.services.AudioPlayerService"/>
 
         <meta-data
             android:name="preloaded_fonts"

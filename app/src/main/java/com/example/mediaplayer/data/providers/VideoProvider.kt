@@ -88,6 +88,8 @@ class VideoProvider @Inject constructor(
 
                     val quality = width?.compareNumber(height) ?: 0
 
+                    Log.e("TAG", "${retriever.embeddedPicture}")
+
                     listOfVideo.add(
                         VideoInfo(
                             contentUri,

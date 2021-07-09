@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
@@ -28,6 +29,7 @@ import com.example.mediaplayer.data.models.video.VideoAudioInfo
 import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.MediaDiffUtils
 import com.example.mediaplayer.data.utils.doAsync
+import com.example.mediaplayer.ui.fragments.audioList.AudioListFragmentDirections
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.delay
@@ -70,18 +72,27 @@ class AudioListAdapter @Inject constructor(
             val image=itemView.findViewById<ImageView>(R.id.audioImage)
             val title=itemView.findViewById<TextView>(R.id.audioTitle)
             val author=itemView.findViewById<TextView>(R.id.audioAuthor)
+            val layout=itemView.findViewById<ConstraintLayout>(R.id.audioItem)
 
             Glide
                 .with(context)
                 .load(audio.embeddedPicture)
                 .error(R.drawable.ic_music)
                 .into(image)
+
             title.doAsync {
                 delay(3000)
                 it.isSelected=true
             }
+
             title.text=audio.title
             author.text=audio.author
+
+            layout.setOnClickListener {
+                val action=AudioListFragmentDirections.actionAudioListToAudioPlayerActivity(audio)
+                val navController = Navigation.findNavController(itemView)
+                navController.navigate(action)
+            }
         }
     }
 }

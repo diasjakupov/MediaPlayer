@@ -9,7 +9,7 @@
     android:backgroundTint="#70000000"
     android:foregroundGravity="bottom"
     app:layout_anchorGravity="bottom"
-    tools:context=".ui.fragments.player.VideoSpeedFragment">
+    tools:context=".ui.fragments.videoPlayer.VideoSpeedFragment">
 
     <TextView
         android:id="@+id/videoSpeedIndicator"

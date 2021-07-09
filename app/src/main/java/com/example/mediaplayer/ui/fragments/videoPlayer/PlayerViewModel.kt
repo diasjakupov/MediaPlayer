@@ -1,4 +1,4 @@
-package com.example.mediaplayer.ui.fragments.player
+package com.example.mediaplayer.ui.fragments.videoPlayer
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

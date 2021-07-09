@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/playerFragment"
-        android:name="com.example.mediaplayer.ui.fragments.player.PlayerFragment"
+        android:name="com.example.mediaplayer.ui.fragments.videoPlayer.PlayerFragment"
         android:label="fragment_player"
         tools:layout="@layout/fragment_player" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <dialog
         android:id="@+id/videoTrackSelection"
-        android:name="com.example.mediaplayer.ui.fragments.player.videoTrackSelection.VideoTrackSelection"
+        android:name="com.example.mediaplayer.ui.fragments.videoPlayer.videoTrackSelection.VideoTrackSelection"
         android:label="fragment_video_track_selection"
         tools:layout="@layout/fragment_video_track_selection" />
 </navigation>

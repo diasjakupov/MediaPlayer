@@ -1,4 +1,4 @@
-package com.example.mediaplayer.ui.fragments.player.videoTrackSelection
+package com.example.mediaplayer.ui.fragments.videoPlayer.videoTrackSelection
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

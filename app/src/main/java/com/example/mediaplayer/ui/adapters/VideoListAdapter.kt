@@ -27,6 +27,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.MediaDiffUtils
+import com.example.mediaplayer.data.utils.convertDuration
 import com.example.mediaplayer.data.utils.doAsync
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
 import dagger.hilt.android.qualifiers.ActivityContext
@@ -82,10 +83,12 @@ class VideoListAdapter @Inject constructor(
                 1
             }
             //bind data to view
+            val requestOptions=RequestOptions().frame(((video.duration?.times(1000) ?: 0) /2))
+
             Glide
                 .with(context)
-                .asBitmap()
                 .load(video.contentUri)
+                .apply(requestOptions)
                 .error(R.drawable.ic_error)
                 .into(image)
 
@@ -96,7 +99,7 @@ class VideoListAdapter @Inject constructor(
                 delay(3000)
                 it.isSelected=true
             }
-            duration.text = convertDuration(video.duration!!)
+            duration.text = video.duration!!.convertDuration()
             viewedDuration.layoutParams.width = widthOfView!!.toInt()
             //set up onClickListeners
             dots.setOnClickListener {
@@ -115,28 +118,6 @@ class VideoListAdapter @Inject constructor(
             }
         }
 
-        private fun convertDuration(data: Long): String {
-            val initialSeconds = TimeUnit.MILLISECONDS.toSeconds(data).toInt()
-            val hours = (initialSeconds / 3600)
-            val minutes = abs(((hours * 3600 - initialSeconds) / 60))
-            val seconds = abs((hours * 3600 + minutes * 60 - initialSeconds))
-            val formatMinutes = if (minutes < 10) {
-                "0$minutes"
-            } else {
-                minutes.toString()
-            }
-            val formatHours = if (hours < 10) {
-                "0$hours"
-            } else {
-                hours.toString()
-            }
-            val formatSeconds = if (seconds < 10) {
-                "0$seconds"
-            } else {
-                seconds.toString()
-            }
-            return "$formatHours:$formatMinutes:$formatSeconds"
-        }
     }
 }
 

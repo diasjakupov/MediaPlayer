@@ -10,6 +10,8 @@ import androidx.lifecycle.Observer
 import com.example.mediaplayer.data.db.entites.VideoEntity
 import com.example.mediaplayer.data.models.video.VideoInfo
 import kotlinx.coroutines.*
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 
 fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
@@ -31,6 +33,29 @@ fun View.doAsync(
         }
     }
 
+}
+
+fun Long.convertDuration(): String {
+    val initialSeconds = TimeUnit.MILLISECONDS.toSeconds(this).toInt()
+    val hours = (initialSeconds / 3600)
+    val minutes = abs(((hours * 3600 - initialSeconds) / 60))
+    val seconds = abs((hours * 3600 + minutes * 60 - initialSeconds))
+    val formatMinutes = if (minutes < 10) {
+        "0$minutes"
+    } else {
+        minutes.toString()
+    }
+    val formatHours = if (hours < 10) {
+        "0$hours"
+    } else {
+        hours.toString()
+    }
+    val formatSeconds = if (seconds < 10) {
+        "0$seconds"
+    } else {
+        seconds.toString()
+    }
+    return "$formatHours:$formatMinutes:$formatSeconds"
 }
 
 

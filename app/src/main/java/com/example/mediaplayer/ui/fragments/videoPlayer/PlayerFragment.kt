@@ -1,4 +1,4 @@
-package com.example.mediaplayer.ui.fragments.player
+package com.example.mediaplayer.ui.fragments.videoPlayer
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
