@@ -50,30 +50,31 @@ class AudioPlayerActivity : AppCompatActivity() {
         playerView=findViewById(R.id.audio_player_view)
 
         setSupportActionBar(audioToolbar)
-
+        Log.e("TAG","activity created")
         setData()
+        if(!mBound){
+            val mConnection=object : ServiceConnection {
+                override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                    val localBinder=service as AudioPlayerService.LocalBinder
+                    mService=localBinder.service
+                    mBound=true
 
-        val mConnection=object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                val localBinder=service as AudioPlayerService.LocalBinder
-                mService=localBinder.service
-                mBound=true
+                    initializePlayer()
+                }
 
-                initializePlayer()
+                override fun onServiceDisconnected(name: ComponentName?) {
+                    mBound = false
+                }
+
             }
 
-            override fun onServiceDisconnected(name: ComponentName?) {
-                mBound = false
+            val intent=Intent(this, AudioPlayerService::class.java).apply {
+                bindService(this, mConnection, Context.BIND_AUTO_CREATE)
             }
+            intent.putExtra("AUDIO_INFO", args.audio)
+            Util.startForegroundService(this, intent)
 
         }
-
-        val intent=Intent(this, AudioPlayerService::class.java).apply {
-            bindService(this, mConnection, Context.BIND_AUTO_CREATE)
-        }
-        intent.putExtra("AUDIO_INFO", args.audio)
-        Util.startForegroundService(this, intent)
-
     }
 
     private fun initializePlayer(){

@@ -93,6 +93,7 @@ dependencies {
 
     //Exoplayer
     implementation 'com.google.android.exoplayer:exoplayer:2.14.1'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.14.1'
 
     implementation group: 'commons-io', name: 'commons-io', version: '2.9.0'
 
