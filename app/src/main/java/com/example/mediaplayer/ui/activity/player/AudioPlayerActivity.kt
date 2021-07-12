@@ -13,12 +13,16 @@ import android.telecom.ConnectionService
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.navigation.navArgs
 import com.example.mediaplayer.R
+import com.example.mediaplayer.data.models.audio.AudioInfo
 import com.example.mediaplayer.data.utils.convertDuration
 import com.example.mediaplayer.ui.activity.services.AudioPlayerService
+import com.example.mediaplayer.ui.fragments.audioList.AudioListViewModel
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -36,60 +40,58 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AudioPlayerActivity : AppCompatActivity() {
     private val args: AudioPlayerActivityArgs by navArgs()
+
     @Inject
     lateinit var trackSelector: DefaultTrackSelector
+    var notificationArgs: AudioInfo? = null
     private lateinit var mService: AudioPlayerService
     private var mBound: Boolean = false
-    private var mPlayer: SimpleExoPlayer?=null
+    private var mPlayer: SimpleExoPlayer? = null
     private lateinit var playerView: PlayerView
+    private lateinit var audioRepeatMode: ImageView
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
-        playerView=findViewById(R.id.audio_player_view)
+        playerView = findViewById(R.id.audio_player_view)
+        audioRepeatMode = findViewById(R.id.audioRepeatMode)
 
         setSupportActionBar(audioToolbar)
-        Log.e("TAG","activity created")
-        setData()
-        if(!mBound){
-            val mConnection=object : ServiceConnection {
-                override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                    val localBinder=service as AudioPlayerService.LocalBinder
-                    mService=localBinder.service
-                    mBound=true
-
-                    initializePlayer()
-                }
-
-                override fun onServiceDisconnected(name: ComponentName?) {
-                    mBound = false
-                }
-
+        val mConnection = object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                val localBinder = service as AudioPlayerService.LocalBinder
+                mService = localBinder.service
+                mBound = true
+                initializePlayer()
             }
 
-            val intent=Intent(this, AudioPlayerService::class.java).apply {
-                bindService(this, mConnection, Context.BIND_AUTO_CREATE)
+            override fun onServiceDisconnected(name: ComponentName?) {
+                mBound = false
             }
-            intent.putExtra("AUDIO_INFO", args.audio)
-            Util.startForegroundService(this, intent)
 
         }
+        Intent(this, AudioPlayerService::class.java).apply {
+            bindService(this, mConnection, Context.BIND_AUTO_CREATE)
+        }
+        initializePlayer()
     }
 
-    private fun initializePlayer(){
-        if(mBound){
-            mPlayer=mService.player
-            playerView.player=mPlayer
+    private fun initializePlayer() {
+        if (mBound) {
+            mPlayer = mService.player
+            playerView.player = mPlayer
             playerView.showController()
-            Log.e("TAG", mPlayer?.currentPosition.toString())
+
         }
     }
+
 
     @SuppressLint("SetTextI18n")
-    private fun setData(){
-        val formattedDuration=args.audio.duration!!.convertDuration()
-        supportActionBar?.title=args.audio.title
-        supportActionBar?.subtitle= "${args.audio.author}:  $formattedDuration"
+    private fun setData() {
+        val formattedDuration = args.audio.duration!!.convertDuration()
+        supportActionBar?.title = args.audio.title
+        supportActionBar?.subtitle = "${args.audio.author}:  $formattedDuration"
     }
 }

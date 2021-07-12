@@ -2,6 +2,7 @@ package com.example.mediaplayer.data.repository
 
 import android.Manifest
 import android.app.Application
+import android.content.Context
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -17,16 +18,17 @@ import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.providers.AudioProvider
 import com.example.mediaplayer.data.providers.VideoProvider
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
-@ActivityRetainedScoped
-class Repository @Inject constructor(
+
+class Repository constructor(
     private val videoProvider: VideoProvider,
     private val audioProvider: AudioProvider,
-    private val app: Application,
+    private val app: Context,
     private val localDataSource: LocalDataSource
 ) {
 
@@ -42,7 +44,7 @@ class Repository @Inject constructor(
 
     private fun checkReadingPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
-            app.applicationContext,
+            app,
             Manifest.permission.READ_EXTERNAL_STORAGE
         ) ==
                 PackageManager.PERMISSION_GRANTED
@@ -50,13 +52,15 @@ class Repository @Inject constructor(
 
     private fun checkWritingPermission(): Boolean {
         val permission=ContextCompat.checkSelfPermission(
-            app.applicationContext,
+            app,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) ==
                 PackageManager.PERMISSION_GRANTED
         Log.e("TAG", "perm $permission")
         return permission
     }
+
+
 
     suspend fun getVideoList() {
         if (checkReadingPermission()) {

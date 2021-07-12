@@ -1,6 +1,9 @@
 package com.example.mediaplayer.ui.adapters
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -8,6 +11,7 @@ import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
 import android.util.Size
@@ -29,8 +33,10 @@ import com.example.mediaplayer.data.models.video.VideoAudioInfo
 import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.MediaDiffUtils
 import com.example.mediaplayer.data.utils.doAsync
+import com.example.mediaplayer.ui.activity.services.AudioPlayerService
 import com.example.mediaplayer.ui.fragments.audioList.AudioListFragmentDirections
 import com.example.mediaplayer.ui.fragments.videoList.VideoListFragmentDirections
+import com.google.android.exoplayer2.util.Util
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.delay
 import java.io.File
@@ -39,8 +45,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 
-class AudioListAdapter @Inject constructor(
-    @ActivityContext val context: Context
+class AudioListAdapter constructor(
+    val context: Context
 ) : RecyclerView.Adapter<AudioListAdapter.ViewHolder>() {
     var audioList = arrayListOf<AudioInfo>()
 
@@ -65,7 +71,7 @@ class AudioListAdapter @Inject constructor(
         result.dispatchUpdatesTo(this)
     }
 
-    class ViewHolder(private val context: Context,
+    inner class ViewHolder(private val context: Context,
                      itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         fun bind(audio: AudioInfo) {
@@ -89,9 +95,9 @@ class AudioListAdapter @Inject constructor(
             author.text=audio.author
 
             layout.setOnClickListener {
-                val action=AudioListFragmentDirections.actionAudioListToAudioPlayerActivity(audio)
-                val navController = Navigation.findNavController(itemView)
-                navController.navigate(action)
+                val intent=Intent(context, AudioPlayerService::class.java)
+                intent.putExtra("AUDIO_INFO", audio)
+                Util.startForegroundService(context, intent)
             }
         }
     }

@@ -14,8 +14,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
-@ActivityRetainedScoped
-class AudioProvider @Inject constructor(
+class AudioProvider constructor(
     private val application: Application,
 ): MediaProvider {
     override val selection: String?=null

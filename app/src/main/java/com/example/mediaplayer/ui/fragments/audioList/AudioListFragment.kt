@@ -23,7 +23,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AudioListFragment : Fragment() {
     private val viewModel: AudioListViewModel by activityViewModels()
-    @Inject lateinit var adapter: AudioListAdapter
+    lateinit var adapter: AudioListAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private var _binding: FragmentAudioListBinding? = null
@@ -36,6 +36,7 @@ class AudioListFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding=FragmentAudioListBinding.inflate(inflater, container, false)
         viewModel.getAudioList()
+        adapter= AudioListAdapter(requireContext())
         recyclerView=binding.audioShimmerRV
         recyclerView.adapter=adapter
         progressBar=binding.loadingProgressBar
@@ -48,7 +49,6 @@ class AudioListFragment : Fragment() {
     private fun getAudio(){
         lifecycleScope.launch {
             viewModel.audioList.observe(viewLifecycleOwner, {
-                Log.e("TAG", "${it.last()}")
                 if(it != null){
                     adapter.updateDataList(it)
                     hideProgressBar()

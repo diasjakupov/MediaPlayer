@@ -24,8 +24,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
-@ActivityRetainedScoped
-class VideoProvider @Inject constructor(
+class VideoProvider constructor(
     private val application: Application,
 ) : MediaProvider {
     override val selection: String? = null

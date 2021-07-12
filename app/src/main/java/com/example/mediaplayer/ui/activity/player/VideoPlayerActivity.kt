@@ -3,6 +3,7 @@ package com.example.mediaplayer.ui.activity.player
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -26,6 +27,9 @@ class VideoPlayerActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
+        window.decorView.apply {
+            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         navController=findNavController(R.id.playerNavHostFragment)
         navController.setGraph(R.navigation.player_nav, args.video)

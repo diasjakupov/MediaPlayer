@@ -9,7 +9,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class AudioInfo(
     override val contentUri: Uri,
-    override val title: String?,
+    override val title: String,
     val duration: Long?,
     val size: Long?,
     val author: String?,
