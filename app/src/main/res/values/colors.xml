@@ -33,4 +33,5 @@
     <color name="audioAuthor">@color/grey</color>
     <color name="video_btn">@color/grey</color>
     <color name="played_color">@color/orange</color>
+    <color name="audioItemColor">@color/white</color>
 </resources>

@@ -5,8 +5,9 @@
     <item
         android:title="@string/search"
         app:showAsAction="ifRoom"
-        android:iconTint="@color/white"
+        android:icon="@drawable/ic_search"
+        android:iconTint="@color/searchIconColor"
         tools:targetApi="o"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        android:id="@+id/videoListSearch"/>
+        android:id="@+id/mediaListSearch"/>
 </menu>

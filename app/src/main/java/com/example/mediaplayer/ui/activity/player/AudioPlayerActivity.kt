@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.navigation.navArgs
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.audio.AudioInfo
@@ -39,14 +40,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AudioPlayerActivity : AppCompatActivity() {
-    private val args: AudioPlayerActivityArgs by navArgs()
-
     @Inject
     lateinit var trackSelector: DefaultTrackSelector
+
+    private val viewModel: AudioPlayerViewModel by viewModels()
+
     var notificationArgs: AudioInfo? = null
     private lateinit var mService: AudioPlayerService
     private var mBound: Boolean = false
-    private var mPlayer: SimpleExoPlayer? = null
     private lateinit var playerView: PlayerView
     private lateinit var audioRepeatMode: ImageView
 
@@ -76,22 +77,43 @@ class AudioPlayerActivity : AppCompatActivity() {
             bindService(this, mConnection, Context.BIND_AUTO_CREATE)
         }
         initializePlayer()
+
+        viewModel.playedAudio.observe(this, {
+            setData(it)
+        })
     }
 
     private fun initializePlayer() {
         if (mBound) {
-            mPlayer = mService.player
-            playerView.player = mPlayer
+            playerView.player = mService.player
             playerView.showController()
-
+            changeRepeatMode()
         }
     }
 
+    private fun changeRepeatMode(){
+        audioRepeatMode.setOnClickListener {
+            when(mService.player.repeatMode){
+                Player.REPEAT_MODE_OFF->{
+                    audioRepeatMode.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.exo_icon_repeat_all))
+                    mService.player.repeatMode=Player.REPEAT_MODE_ALL
+                }
+                Player.REPEAT_MODE_ALL->{
+                    audioRepeatMode.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.exo_icon_repeat_one))
+                    mService.player.repeatMode=Player.REPEAT_MODE_ONE
+                }
+                Player.REPEAT_MODE_ONE->{
+                    audioRepeatMode.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.exo_icon_repeat_off))
+                    mService.player.repeatMode=Player.REPEAT_MODE_OFF
+                }
+            }
+        }
+    }
 
     @SuppressLint("SetTextI18n")
-    private fun setData() {
-        val formattedDuration = args.audio.duration!!.convertDuration()
-        supportActionBar?.title = args.audio.title
-        supportActionBar?.subtitle = "${args.audio.author}:  $formattedDuration"
+    private fun setData(audio: AudioInfo) {
+        val formattedDuration = audio.duration!!.convertDuration()
+        supportActionBar?.title = audio.title
+        supportActionBar?.subtitle = "${audio.author}:  $formattedDuration"
     }
 }

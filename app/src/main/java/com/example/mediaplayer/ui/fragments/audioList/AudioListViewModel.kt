@@ -4,11 +4,15 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.mediaplayer.data.models.audio.AudioInfo
+import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 @HiltViewModel
@@ -17,8 +21,20 @@ class AudioListViewModel @Inject constructor(
     app: Application
 ) : AndroidViewModel(app) {
     val audioList = repository.audioList as MutableLiveData
+    val searchedList = MutableLiveData<ArrayList<AudioInfo>?>()
 
     fun getAudioList() = viewModelScope.launch(Dispatchers.IO) {
         repository.getAudioList()
+    }
+
+    fun searchAudioList(search: String) {
+        if (search.isNotEmpty()) {
+            val data = audioList.value?.filter {
+                it.title.toLowerCase(Locale.ROOT).contains(search.toLowerCase(Locale.ROOT))
+            } as ArrayList
+            searchedList.value = data
+        } else {
+            searchedList.value = audioList.value
+        }
     }
 }

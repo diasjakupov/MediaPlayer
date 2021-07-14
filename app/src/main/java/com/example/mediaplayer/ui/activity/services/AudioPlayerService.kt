@@ -99,7 +99,6 @@ class AudioPlayerService : Service() {
                 concatenatingMediaSource.addMediaSource(source)
             }
 
-
             player.setMediaSource(concatenatingMediaSource)
             player.seekToDefaultPosition(audioList.indexOf(audioInfo))
         }
@@ -114,11 +113,11 @@ class AudioPlayerService : Service() {
     }
 
     private fun getLargeIcon(audio: AudioInfo): Bitmap? {
-        return if (audioInfo.embeddedPicture != null) {
+        return if (audio.embeddedPicture != null) {
             BitmapFactory.decodeByteArray(
                 audio.embeddedPicture,
                 0,
-                audio.embeddedPicture!!.size
+                audio.embeddedPicture.size
             )
         } else {
             null
@@ -197,6 +196,7 @@ class AudioPlayerService : Service() {
                 player: Player,
                 windowIndex: Int
             ): MediaDescriptionCompat {
+                repository.setUpPlayedAudio(audioList[player.currentWindowIndex])
                 return MediaDescriptionCompat.Builder()
                     .setTitle(audioList[player.currentWindowIndex].title)
                     .setDescription(audioList[player.currentWindowIndex].author ?: "")

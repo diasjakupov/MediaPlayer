@@ -1,7 +1,6 @@
 package com.example.mediaplayer.ui.fragments.videoList
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.*
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -65,7 +64,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun searchVideoList(search: String) {
-        viewModel.searchVideoList(search)
+        viewModel.searchVideoList(search.trim())
         showProgressBar()
         viewModel.searchedList.observe(viewLifecycleOwner, { list ->
             viewModel.viewedVideoList.observe(viewLifecycleOwner, { viewedList->
@@ -80,7 +79,7 @@ class VideoListFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.video_list_toolbar_menu, menu)
-        val search = menu.findItem(R.id.videoListSearch)
+        val search = menu.findItem(R.id.mediaListSearch)
         val searchView = search.actionView as SearchView
         searchView.queryHint = "Search..."
 
