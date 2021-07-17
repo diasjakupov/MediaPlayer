@@ -5,7 +5,9 @@ plugins {
     id 'kotlin-android-extensions'
     id "dagger.hilt.android.plugin"
     id 'androidx.navigation.safeargs'
+    id 'com.google.gms.google-services'
 }
+
 
 android {
     compileSdkVersion 30
@@ -102,4 +104,7 @@ dependencies {
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation platform('com.google.firebase:firebase-bom:28.2.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }

@@ -17,12 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MediaPlayer"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.activity.player.AudioPlayerActivity"></activity>
+        <activity android:name=".ui.activity.player.audio.AudioPlayerActivity"></activity>
         <activity
-            android:name=".ui.activity.player.VideoPlayerActivity"
+            android:name=".ui.activity.player.video.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|layoutDirection" />
         <activity android:name=".ui.activity.videoDetailInfo.VideoDetailInfoActivity" />
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name=".ui.activity.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

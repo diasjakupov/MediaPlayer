@@ -1,7 +1,7 @@
 package com.example.mediaplayer.data.di
 
 import android.content.Context
-import com.example.mediaplayer.ui.activity.player.ExoPlayerTrackSelection
+import com.example.mediaplayer.ui.activity.player.video.ExoPlayerTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import dagger.Module
 import dagger.Provides
@@ -24,7 +24,7 @@ class PlayerModule {
 
     @Provides
     @ActivityScoped
-    fun provideCustomExoPlayerTrackSelector(trackSelector: DefaultTrackSelector): ExoPlayerTrackSelection{
+    fun provideCustomExoPlayerTrackSelector(trackSelector: DefaultTrackSelector): ExoPlayerTrackSelection {
         return ExoPlayerTrackSelection(trackSelector)
     }
 }

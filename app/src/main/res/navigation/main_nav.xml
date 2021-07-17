@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_audioList_to_audioPlayerActivity"
             app:destination="@id/audioPlayerActivity" />
+        <action
+            android:id="@+id/action_audioList_to_audioInfoFragment"
+            app:destination="@id/audioInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/videoList"
@@ -53,7 +56,7 @@
     </activity>
     <activity
         android:id="@+id/videoPlayerActivity"
-        android:name="com.example.mediaplayer.ui.activity.player.VideoPlayerActivity"
+        android:name="com.example.mediaplayer.ui.activity.player.video.VideoPlayerActivity"
         android:label="activity_video_player"
         tools:layout="@layout/activity_video_player" >
         <argument
@@ -62,11 +65,23 @@
     </activity>
     <activity
         android:id="@+id/audioPlayerActivity"
-        android:name="com.example.mediaplayer.ui.activity.player.AudioPlayerActivity"
+        android:name="com.example.mediaplayer.ui.activity.player.audio.AudioPlayerActivity"
         android:label="activity_audio_player"
         tools:layout="@layout/activity_audio_player" >
         <argument
             android:name="audio"
             app:argType="com.example.mediaplayer.data.models.audio.AudioInfo" />
     </activity>
+    <dialog
+        android:id="@+id/audioInfoFragment"
+        tools:layout="@layout/fragment_audio_info"
+        android:name="com.example.mediaplayer.ui.fragments.audioList.AudioInfoFragment"
+        android:label="AudioInfoFragment" >
+        <argument
+            android:name="audio"
+            app:argType="com.example.mediaplayer.data.models.audio.AudioInfo" />
+        <action
+            android:id="@+id/action_audioInfoFragment_to_audioList"
+            app:destination="@id/audioList" />
+    </dialog>
 </navigation>

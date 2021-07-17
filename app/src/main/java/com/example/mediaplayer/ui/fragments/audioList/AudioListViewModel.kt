@@ -1,6 +1,7 @@
 package com.example.mediaplayer.ui.fragments.audioList
 
 import android.app.Application
+import android.content.IntentSender
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -36,5 +37,15 @@ class AudioListViewModel @Inject constructor(
         } else {
             searchedList.value = audioList.value
         }
+    }
+
+    fun updateAudioList(audio: AudioInfo){
+        val newList=audioList.value?.filter {
+            it.contentUri != audio.contentUri
+        }
+        audioList.value= newList as ArrayList<AudioInfo>?
+    }
+    fun deleteAudioFromStorage(audio: AudioInfo): IntentSender? {
+        return repository.deleteAudioByUri(audio)
     }
 }

@@ -10,7 +10,7 @@ import android.widget.RadioGroup
 import androidx.fragment.app.activityViewModels
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.video.CustomFormatOfTrack
-import com.example.mediaplayer.ui.activity.player.ExoPlayerTrackSelection
+import com.example.mediaplayer.ui.activity.player.video.ExoPlayerTrackSelection
 import com.example.mediaplayer.ui.fragments.videoPlayer.PlayerViewModel
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector

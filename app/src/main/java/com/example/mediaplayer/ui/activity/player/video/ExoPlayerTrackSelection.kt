@@ -1,4 +1,4 @@
-package com.example.mediaplayer.ui.activity.player
+package com.example.mediaplayer.ui.activity.player.video
 
 import com.example.mediaplayer.data.models.video.CustomFormatOfTrack
 import com.google.android.exoplayer2.source.TrackGroup

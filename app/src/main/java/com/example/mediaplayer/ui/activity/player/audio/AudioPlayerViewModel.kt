@@ -1,4 +1,4 @@
-package com.example.mediaplayer.ui.activity.player
+package com.example.mediaplayer.ui.activity.player.audio
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData

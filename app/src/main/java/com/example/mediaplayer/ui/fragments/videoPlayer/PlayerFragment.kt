@@ -20,7 +20,7 @@ import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.utils.DoubleClickListener
 import com.example.mediaplayer.data.utils.ifContains
 import com.example.mediaplayer.data.utils.observeOnce
-import com.example.mediaplayer.ui.activity.player.ExoPlayerTrackSelection
+import com.example.mediaplayer.ui.activity.player.video.ExoPlayerTrackSelection
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player

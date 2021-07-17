@@ -1,4 +1,4 @@
-package com.example.mediaplayer.ui.activity
+package com.example.mediaplayer.ui.activity.main
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private var isWritingPermissionGranted = false
     private lateinit var navController: NavController
     private lateinit var bottomNavigation: BottomNavigationView
+    private val viewModel by viewModels<MainActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,9 @@ class MainActivity : AppCompatActivity() {
         permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             isReadingPermissionGranted = it[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
             isWritingPermissionGranted = it[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: false
+            if(it[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true){
+                viewModel.startGettingData()
+            }
         }
         requestPermission()
 
@@ -57,7 +62,6 @@ class MainActivity : AppCompatActivity() {
     private fun requestPermission() {
         val writePermission = ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
         isWritingPermissionGranted=writePermission
-        Log.e("TAG", "$writePermission write")
         if(!writePermission){
             permissionLauncher.launch(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
         }

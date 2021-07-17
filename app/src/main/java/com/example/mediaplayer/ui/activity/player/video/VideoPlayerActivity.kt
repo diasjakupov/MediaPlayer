@@ -1,4 +1,4 @@
-package com.example.mediaplayer.ui.activity.player
+package com.example.mediaplayer.ui.activity.player.video
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -18,7 +18,7 @@ class VideoPlayerActivity : AppCompatActivity() {
     //Initialize variables
     private lateinit var navController: NavController
     @Inject lateinit var trackSelectorUtil: ExoPlayerTrackSelection
-    val args: VideoPlayerActivityArgs by navArgs()
+    private val args: VideoPlayerActivityArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

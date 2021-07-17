@@ -76,6 +76,7 @@ class AudioListAdapter constructor(
         RecyclerView.ViewHolder(itemView) {
         fun bind(audio: AudioInfo) {
             val image=itemView.findViewById<ImageView>(R.id.audioImage)
+            val dots=itemView.findViewById<ImageView>(R.id.audioInfoIV)
             val title=itemView.findViewById<TextView>(R.id.audioTitle)
             val author=itemView.findViewById<TextView>(R.id.audioAuthor)
             val layout=itemView.findViewById<ConstraintLayout>(R.id.audioItem)
@@ -93,11 +94,22 @@ class AudioListAdapter constructor(
 
             title.text=audio.title
             author.text=audio.author
+            dots.setOnClickListener {
+                val action=AudioListFragmentDirections.actionAudioListToAudioInfoFragment(audio)
+                val navController = Navigation.findNavController(itemView)
+                navController.navigate(action)
+            }
 
             layout.setOnClickListener {
-                val intent=Intent(context, AudioPlayerService::class.java)
-                intent.putExtra("AUDIO_INFO", audio)
-                Util.startForegroundService(context, intent)
+                it.doAsync {
+                    val intent = Intent(context, AudioPlayerService::class.java)
+                    intent.putExtra("AUDIO_INFO", audio)
+                    try{
+                        Util.startForegroundService(context, intent)
+                    }catch (e:Exception){
+                        Log.e("TAG", "${e.message}")
+                    }
+                }
             }
         }
     }

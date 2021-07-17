@@ -99,6 +99,14 @@ class Repository constructor(
         }
     }
 
+    fun deleteAudioByUri(audio: AudioInfo): IntentSender? {
+        if (checkWritingPermission()) {
+            return videoProvider.deleteMediaByUri(audio.contentUri)
+        } else {
+            return null
+        }
+    }
+
     suspend fun updateOrCreateVideoEntity(videoEntity: VideoEntity) {
         localDataSource.insertOrUpdateVideoEntity(videoEntity)
     }

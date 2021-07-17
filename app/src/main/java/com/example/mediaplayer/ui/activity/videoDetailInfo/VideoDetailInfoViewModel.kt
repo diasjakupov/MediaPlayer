@@ -34,14 +34,12 @@ class VideoDetailInfoViewModel @Inject constructor() : ViewModel() {
             val data= mutableListOf<CustomMediaItemFormat>()
             for (i in 1 until trackCount) {
                 val format = extractor.getTrackFormat(i)
-                Log.e("TAG", "$format")
                 if (format.getString(MediaFormat.KEY_MIME)!!.contains("audio")) {
                     data.add(
                         VideoAudioInfo(format.getString(MediaFormat.KEY_LANGUAGE), "AudioInfo Track")
                     )
                 }
                 else if (format.getString(MediaFormat.KEY_MIME)!!.contains("x-subrip")) {
-                    Log.e("TAG", "$format")
                     data.add(
                         SubTitleInfo(format.getString(MediaFormat.KEY_LANGUAGE), "Subtitle Track")
                     )

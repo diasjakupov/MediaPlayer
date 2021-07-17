@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager.widget.ViewPager
 import com.example.mediaplayer.R
-import com.example.mediaplayer.ui.activity.player.ExoPlayerTrackSelection
+import com.example.mediaplayer.ui.activity.player.video.ExoPlayerTrackSelection
 import com.example.mediaplayer.ui.adapters.VideoTrackSectionPagerAdapter
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector

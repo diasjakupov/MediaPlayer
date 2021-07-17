@@ -23,9 +23,8 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.audio.AudioInfo
 import com.example.mediaplayer.data.repository.Repository
-import com.example.mediaplayer.ui.activity.MainActivity
-import com.example.mediaplayer.ui.activity.player.AudioPlayerActivity
-import com.example.mediaplayer.ui.activity.player.AudioPlayerActivityArgs
+import com.example.mediaplayer.ui.activity.player.audio.AudioPlayerActivity
+import com.example.mediaplayer.ui.activity.player.audio.AudioPlayerActivityArgs
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -62,6 +61,7 @@ class AudioPlayerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        Log.e("TAG", "service created")
         trackSelector = DefaultTrackSelector(this)
         player = SimpleExoPlayer.Builder(this)
             .setTrackSelector(trackSelector)
@@ -81,11 +81,11 @@ class AudioPlayerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.e("TAG", "start command")
         audioInfo = intent?.getParcelableExtra("AUDIO_INFO")!!
         audioList = repository.audioList.value!!
+        Log.e("TAG", "start commend with $audioInfo")
         if (audioInfo.playedDuration == 0L) {
-            concatenatingMediaSource.clear()
-
             audioList.forEach {
                 val item = MediaItem
                     .Builder()
@@ -106,6 +106,7 @@ class AudioPlayerService : Service() {
     }
 
     override fun onDestroy() {
+        Log.e("TAG", "service cancelled")
         playerNotificationManager.setPlayer(null)
         player.playWhenReady = false
         player.release()
@@ -142,6 +143,7 @@ class AudioPlayerService : Service() {
                                 AudioPlayerActivity::class.java
                             ).apply {
                                 val audio = audioList[player.currentWindowIndex]
+                                Log.e("TAG", "from intent creating $audio")
                                 audio.playedDuration = player.currentPosition
                                 putExtras(AudioPlayerActivityArgs.Builder(audio).build().toBundle())
                             })
@@ -166,21 +168,20 @@ class AudioPlayerService : Service() {
                     notification: Notification,
                     ongoing: Boolean
                 ) {
-                    if (ongoing) {
+                    if(ongoing){
                         startForeground(notificationId, notification)
                         player.prepare()
                         player.playWhenReady = true
-                    } // allow notification to be dismissed if player is stopped
-                    else {
+                    }else{
                         stopForeground(false)
                     }
-
                 }
 
                 override fun onNotificationCancelled(
                     notificationId: Int,
                     dismissedByUser: Boolean
                 ) {
+                    Log.e("TAG", "notification cancelled")
                     stopSelf()
                 }
             })
@@ -197,6 +198,7 @@ class AudioPlayerService : Service() {
                 windowIndex: Int
             ): MediaDescriptionCompat {
                 repository.setUpPlayedAudio(audioList[player.currentWindowIndex])
+
                 return MediaDescriptionCompat.Builder()
                     .setTitle(audioList[player.currentWindowIndex].title)
                     .setDescription(audioList[player.currentWindowIndex].author ?: "")

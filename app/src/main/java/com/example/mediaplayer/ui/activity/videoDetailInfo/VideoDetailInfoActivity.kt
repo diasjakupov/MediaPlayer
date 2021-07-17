@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mediaplayer.databinding.ActivityVideoDetailInfoBinding
-import com.example.mediaplayer.ui.activity.player.VideoPlayerActivity
+import com.example.mediaplayer.ui.activity.player.video.VideoPlayerActivity
 import com.example.mediaplayer.ui.adapters.VideoItemInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_video_detail_info.customToolBar
