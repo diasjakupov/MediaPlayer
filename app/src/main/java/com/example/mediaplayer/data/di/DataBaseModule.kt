@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.mediaplayer.MyApplication
 import com.example.mediaplayer.data.db.MediaPlayerDataBase
+import com.example.mediaplayer.data.db.dao.PlaylistDao
 import com.example.mediaplayer.data.db.dao.VideoDao
 import com.example.mediaplayer.data.db.datasource.LocalDataSource
 import com.example.mediaplayer.data.providers.AudioProvider
@@ -35,6 +36,12 @@ class DataBaseModule {
     @Provides
     fun provideVideoDao(database: MediaPlayerDataBase): VideoDao {
         return database.videoDao()
+    }
+
+    @Singleton
+    @Provides
+    fun providePlaylistDao(database: MediaPlayerDataBase): PlaylistDao {
+        return database.playlistDao()
     }
 
     @Singleton

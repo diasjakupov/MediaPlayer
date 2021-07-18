@@ -16,7 +16,8 @@ data class AudioInfo(
     val albumUri: Uri,
     val realPath: String?,
     val embeddedPicture: ByteArray?,
-    var playedDuration: Long?=0
+    var playedDuration: Long?=0,
+    val bitrate:String?
 ):Parcelable, CustomMediaInfo(contentUri, title) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

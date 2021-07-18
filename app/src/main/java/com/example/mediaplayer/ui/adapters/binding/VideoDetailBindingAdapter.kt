@@ -15,21 +15,7 @@ class VideoDetailBindingAdapter {
 
     companion object{
 
-
-        @JvmStatic
-        @BindingAdapter("applyVideoImage")
-        fun applyVideoImage(view:ImageView, video: VideoInfo){
-            val retriever=MediaMetadataRetriever()
-            retriever.setDataSource(view.context, video.contentUri)
-            Glide.with(view.context)
-                .load(retriever.frameAtTime)
-                .into(view)
-        }
-
-        @SuppressLint("SetTextI18n")
-        @JvmStatic
-        @BindingAdapter("presentDurationWithUnits")
-        fun presentDuration(view: TextView, data: Long) {
+        private fun presentDuration(data: Long): String{
             val initialSeconds = TimeUnit.MILLISECONDS.toSeconds(data).toInt()
             val hours = (initialSeconds / 3600)
             val minutes = abs(((hours * 3600 - initialSeconds) / 60))
@@ -49,18 +35,60 @@ class VideoDetailBindingAdapter {
             } else {
                 ""
             }
-            view.text = "$formatHours$formatMinutes$formatSeconds"
+            return "$formatHours$formatMinutes$formatSeconds"
         }
 
-        @SuppressLint("SetTextI18n")
-        @JvmStatic
-        @BindingAdapter("convertSize")
-        fun convertSize(view:TextView,data:Long?){
-            view.text= (if(data != null ){
+        private fun convertSize(data:Long?): String{
+            return (if(data != null ){
                 FileUtils.byteCountToDisplaySize(data)
             }else{
                 ""
             }).toString()
+        }
+
+        @JvmStatic
+        @BindingAdapter("applyVideoImage")
+        fun applyVideoImage(view:ImageView, video: VideoInfo){
+            val retriever=MediaMetadataRetriever()
+            retriever.setDataSource(view.context, video.contentUri)
+            Glide.with(view.context)
+                .load(retriever.frameAtTime)
+                .into(view)
+        }
+
+        @SuppressLint("SetTextI18n")
+        @JvmStatic
+        @BindingAdapter("presentDurationWithUnits")
+        fun presentDurationWithUnits(view: TextView, data: Long) {
+            view.text = presentDuration(data)
+        }
+
+        @SuppressLint("SetTextI18n")
+        @JvmStatic
+        @BindingAdapter("presentDurationForAudioInfo")
+        fun presentDurationForAudioInfo(view: TextView, data: Long) {
+            view.text = "Duration: ${presentDuration(data)}"
+        }
+
+        @SuppressLint("SetTextI18n")
+        @JvmStatic
+        @BindingAdapter("convertSizeForVideoDetail")
+        fun convertSizeForVideoDetail(view:TextView,data:Long?){
+            view.text= convertSize(data)
+        }
+
+        @SuppressLint("SetTextI18n")
+        @JvmStatic
+        @BindingAdapter("convertSizeForAudioInfo")
+        fun convertSizeForAudioInfo(view:TextView,data:Long?){
+            view.text= "Size: ${convertSize(data)}"
+        }
+
+        @SuppressLint("SetTextI18n")
+        @JvmStatic
+        @BindingAdapter("presentBitrateValue")
+        fun presentBitrateValue(view:TextView,data:String?){
+            view.text= "Bitrate: $data bit/sec"
         }
 
         @SuppressLint("SetTextI18n")

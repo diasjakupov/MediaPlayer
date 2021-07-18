@@ -34,7 +34,7 @@ class AudioProvider constructor(
             MediaStore.Audio.Media.DISPLAY_NAME,
             MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Albums.ALBUM_ID,
-            MediaStore.Audio.Media.DATA
+            MediaStore.Audio.Media.DATA,
         )
     }
 
@@ -68,17 +68,26 @@ class AudioProvider constructor(
                         MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                         albumId
                     )
+                    val size = cursor.getLong(sizeColumn)
+
                     val retriever = MediaMetadataRetriever()
                     retriever.setDataSource(application.applicationContext, contentUri)
+
                     val time =
                         retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
                             ?.toLong()
-
-                    val size = cursor.getLong(sizeColumn)
                     val author=retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+                    val bitrate=retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE)
 
                     listOfAudio.add(AudioInfo(
-                        contentUri, title, time, size, author, albumUri, dataValue, retriever.embeddedPicture))
+                        contentUri= contentUri,
+                        title=title,
+                        duration=time,
+                        size=size, author=author,
+                        albumUri=albumUri, realPath = dataValue,
+                        embeddedPicture= retriever.embeddedPicture,
+                        bitrate = bitrate))
+
 
                     if (listOfAudio.size == 20) {
                         emit(listOfAudio)
