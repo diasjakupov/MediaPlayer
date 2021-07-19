@@ -2,7 +2,6 @@ package com.example.mediaplayer.data.models.audio
 
 import android.net.Uri
 import android.os.Parcelable
-import androidx.room.Embedded
 import com.example.mediaplayer.data.models.CustomMediaInfo
 import kotlinx.android.parcel.Parcelize
 

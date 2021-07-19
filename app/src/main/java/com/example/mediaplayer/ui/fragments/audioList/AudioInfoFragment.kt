@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mediaplayer.R
 import com.example.mediaplayer.databinding.FragmentAudioInfoBinding
@@ -58,10 +59,7 @@ class AudioInfoFragment : BottomSheetDialogFragment() {
             } else {
                 binding.audioInfoDetail.visibility = View.VISIBLE;
             }
-
-
         }
-
         binding.audioDeleteItem.setOnClickListener {
             val intentSender = viewModel.deleteAudioFromStorage(args.audio)
             intentSender?.let {
@@ -69,6 +67,10 @@ class AudioInfoFragment : BottomSheetDialogFragment() {
                     IntentSenderRequest.Builder(it).build()
                 )
             }
+        }
+        binding.audioAddToPlaylist.setOnClickListener {
+            val action=AudioInfoFragmentDirections.actionAudioInfoFragmentToPlaylistFormFragment()
+            findNavController().navigate(action)
         }
         return binding.root
     }

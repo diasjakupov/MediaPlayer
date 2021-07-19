@@ -15,11 +15,18 @@
         <item name="bottomNavigationStyle">@style/customBottomNav</item>
         <item name="android:editTextColor">@color/editTextColor</item>
         <item name="android:textColorHint">@color/placeholder</item>
+        <item name="chipStyle">@style/custom_chip_style</item>
     </style>
 
     <style name="customRadioBtn" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="colorControlNormal">@color/white</item>
         <item name="colorControlActivated">@color/orange</item>
+    </style>
+
+    <style name="custom_chip_style" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_background</item>
+        <item name="checkedIconTint">@color/darkGrey</item>
+        <item name="android:textColor">@color/titleColor</item>
     </style>
 
     <style name="customToolbar" parent="TextAppearance.MaterialComponents.Headline6">

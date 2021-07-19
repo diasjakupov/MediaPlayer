@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_video_library"
         android:title="Video"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/playlistsFragment"
+        android:icon="@drawable/ic_playlist"
+        android:title="Playlists"
+        app:showAsAction="ifRoom" />
 </menu>

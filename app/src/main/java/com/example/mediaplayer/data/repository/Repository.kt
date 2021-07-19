@@ -40,6 +40,7 @@ class Repository constructor(
     private var isAudioParsingEnded = false
 
     val viewedVideoList = localDataSource.getVideoList().asLiveData()
+    val playlists=localDataSource.getPlaylists().asLiveData()
 
     private val _playedAudio=MutableLiveData<AudioInfo>()
     val playedAudio:LiveData<AudioInfo> = _playedAudio

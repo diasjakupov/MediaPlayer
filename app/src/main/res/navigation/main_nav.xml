@@ -83,5 +83,18 @@
         <action
             android:id="@+id/action_audioInfoFragment_to_audioList"
             app:destination="@id/audioList" />
+        <action
+            android:id="@+id/action_audioInfoFragment_to_playlistFormFragment"
+            app:destination="@id/playlistFormFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.example.mediaplayer.ui.fragments.playlist.PlaylistFragment"
+        android:label="Playlists"
+        tools:layout="@layout/fragment_playlist" />
+    <dialog
+        android:id="@+id/playlistFormFragment"
+        android:name="com.example.mediaplayer.ui.fragments.playlist.PlaylistFormFragment"
+        android:label="fragment_playlist_form"
+        tools:layout="@layout/fragment_playlist_form" />
 </navigation>

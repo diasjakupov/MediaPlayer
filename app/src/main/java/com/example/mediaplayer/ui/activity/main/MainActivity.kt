@@ -48,7 +48,8 @@ class MainActivity : AppCompatActivity() {
 
         val appConfig= AppBarConfiguration(setOf(
             R.id.audioList,
-            R.id.videoList
+            R.id.videoList,
+            R.id.playlistsFragment
         ))
         setSupportActionBar(customToolBar)
         bottomNavigation.setupWithNavController(navController)
