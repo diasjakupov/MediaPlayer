@@ -19,6 +19,7 @@
             app:titleTextColor="@color/actionBarTitleColor"
             android:background="@color/actionBarColor"
             app:titleTextAppearance="@style/customToolbar"
+            app:title="TEST"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"/>
     </com.google.android.material.appbar.AppBarLayout>

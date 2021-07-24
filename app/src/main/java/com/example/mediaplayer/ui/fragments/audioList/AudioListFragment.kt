@@ -12,10 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mediaplayer.R
-import com.example.mediaplayer.databinding.FragmentAudioListBinding
+import com.example.mediaplayer.databinding.AudioListBinding
 import com.example.mediaplayer.ui.adapters.AudioListAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_audio_list.view.*
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -24,8 +23,9 @@ class AudioListFragment : Fragment(), SearchView.OnQueryTextListener {
     lateinit var adapter: AudioListAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private var _binding: FragmentAudioListBinding? = null
     private var isSearching = false
+
+    private var _binding: AudioListBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -33,9 +33,11 @@ class AudioListFragment : Fragment(), SearchView.OnQueryTextListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentAudioListBinding.inflate(inflater, container, false)
+        _binding = AudioListBinding.inflate(inflater, container, false)
         viewModel.getAudioList()
-        adapter = AudioListAdapter(requireContext())
+        adapter= AudioListAdapter.Builder(requireContext())
+            .setIsPlaylistFlag(false)
+            .build()
         recyclerView = binding.audioShimmerRV
         recyclerView.adapter = adapter
         progressBar = binding.loadingProgressBar
@@ -98,6 +100,13 @@ class AudioListFragment : Fragment(), SearchView.OnQueryTextListener {
         searchView.setOnQueryTextListener(this)
     }
 
+    private fun setupSearchIcon(searchView: SearchView) {
+        val searchIcon = searchView.findViewById<ImageView>(R.id.search_button)
+        val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_search)
+        icon?.setTint(ContextCompat.getColor(requireContext(), R.color.searchIconColor))
+        searchIcon.setImageDrawable(icon)
+    }
+
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (!query.isNullOrBlank()) {
             searchAudioList(query)
@@ -108,13 +117,6 @@ class AudioListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextChange(newText: String?): Boolean {
         return true
-    }
-
-    private fun setupSearchIcon(searchView: SearchView) {
-        val searchIcon = searchView.findViewById<ImageView>(R.id.search_button)
-        val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_search)
-        icon?.setTint(ContextCompat.getColor(requireContext(), R.color.searchIconColor))
-        searchIcon.setImageDrawable(icon)
     }
 
     private fun showProgressBar() {

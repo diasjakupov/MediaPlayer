@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mediaplayer.R
 import com.example.mediaplayer.ui.adapters.PlaylistAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,12 +18,23 @@ import javax.inject.Inject
 class PlaylistFragment : Fragment() {
     @Inject lateinit var adapter: PlaylistAdapter
     val viewModel: PlaylistsViewModel by activityViewModels()
+    private lateinit var playlistRV: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playlist, container, false)
+        val rootView=inflater.inflate(R.layout.fragment_playlist, container, false)
+        playlistRV=rootView.findViewById(R.id.playlistRV)
+        playlistRV.adapter=adapter
+        playlistRV.layoutManager=GridLayoutManager(this.context, 2)
+
+        viewModel.playlist.observe(viewLifecycleOwner, {
+            if(it != null){
+                adapter.updateDataSet(it)
+            }
+        })
+
+        return rootView
     }
 }

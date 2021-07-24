@@ -14,6 +14,9 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlist")
     fun getPlaylistEntity(): Flow<List<PlaylistEntity>>
 
+    @Query("SELECT * FROM playlist ORDER BY id DESC LIMIT 1 ")
+    fun getLastCreatedPlaylist(): PlaylistEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdatePlaylistEntity(entity: PlaylistEntity)
 }

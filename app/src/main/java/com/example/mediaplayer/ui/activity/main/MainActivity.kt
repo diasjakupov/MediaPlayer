@@ -5,9 +5,13 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -34,23 +38,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //Request permission
-        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            isReadingPermissionGranted = it[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
-            isWritingPermissionGranted = it[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: false
-            if(it[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true){
-                viewModel.startGettingData()
+        permissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+                isReadingPermissionGranted = it[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
+                isWritingPermissionGranted = it[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: false
+                if (it[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true) {
+                    viewModel.startGettingData()
+                }
             }
-        }
         requestPermission()
 
-        navController=findNavController(R.id.navHostFragment)
-        bottomNavigation=bottomNav
+        navController = findNavController(R.id.navHostFragment)
+        bottomNavigation = bottomNav
 
-        val appConfig= AppBarConfiguration(setOf(
-            R.id.audioList,
-            R.id.videoList,
-            R.id.playlistsFragment
-        ))
+        val appConfig = AppBarConfiguration(
+            setOf(
+                R.id.audioList,
+                R.id.videoList,
+                R.id.playlistsFragment
+            )
+        )
         setSupportActionBar(customToolBar)
         bottomNavigation.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appConfig)
@@ -61,9 +68,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermission() {
-        val writePermission = ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-        isWritingPermissionGranted=writePermission
-        if(!writePermission){
+        val writePermission = ContextCompat.checkSelfPermission(
+            applicationContext,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+        isWritingPermissionGranted = writePermission
+        if (!writePermission) {
             permissionLauncher.launch(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
         }
     }

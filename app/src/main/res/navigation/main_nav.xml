@@ -9,7 +9,7 @@
         android:id="@+id/audioList"
         android:name="com.example.mediaplayer.ui.fragments.audioList.AudioListFragment"
         android:label="Audio"
-        tools:layout="@layout/fragment_audio_list" >
+        tools:layout="@layout/audio_list" >
         <action
             android:id="@+id/action_audioList_to_audioPlayerActivity"
             app:destination="@id/audioPlayerActivity" />
@@ -91,10 +91,26 @@
         android:id="@+id/playlistsFragment"
         android:name="com.example.mediaplayer.ui.fragments.playlist.PlaylistFragment"
         android:label="Playlists"
-        tools:layout="@layout/fragment_playlist" />
+        tools:layout="@layout/fragment_playlist" >
+        <action
+            android:id="@+id/action_playlistsFragment_to_playlistAudioFragment"
+            app:destination="@id/PlaylistAudioActivity" />
+    </fragment>
     <dialog
         android:id="@+id/playlistFormFragment"
         android:name="com.example.mediaplayer.ui.fragments.playlist.PlaylistFormFragment"
         android:label="fragment_playlist_form"
-        tools:layout="@layout/fragment_playlist_form" />
+        tools:layout="@layout/fragment_playlist_form" >
+        <argument
+            android:name="audio"
+            app:argType="com.example.mediaplayer.data.models.audio.AudioInfo" />
+    </dialog>
+    <activity
+        android:id="@+id/PlaylistAudioActivity"
+        android:name="com.example.mediaplayer.ui.fragments.audioList.PlaylistAudioActivity"
+        android:label="PlaylistAudioActivity" >
+        <argument
+            android:name="playlist"
+            app:argType="com.example.mediaplayer.data.db.entites.PlaylistEntity" />
+    </activity>
 </navigation>

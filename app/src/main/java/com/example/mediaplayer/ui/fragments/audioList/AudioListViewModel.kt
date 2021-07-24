@@ -2,11 +2,9 @@ package com.example.mediaplayer.ui.fragments.audioList
 
 import android.app.Application
 import android.content.IntentSender
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.example.mediaplayer.data.db.entites.AudioEntity
 import com.example.mediaplayer.data.models.audio.AudioInfo
-import com.example.mediaplayer.data.models.video.VideoInfo
 import com.example.mediaplayer.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +21,7 @@ class AudioListViewModel @Inject constructor(
 ) : AndroidViewModel(app) {
     val audioList = repository.audioList as MutableLiveData
     val searchedList = MutableLiveData<ArrayList<AudioInfo>?>()
+
 
     fun getAudioList() = viewModelScope.launch(Dispatchers.IO) {
         repository.getAudioList()
@@ -45,7 +44,16 @@ class AudioListViewModel @Inject constructor(
         }
         audioList.value= newList as ArrayList<AudioInfo>?
     }
+
     fun deleteAudioFromStorage(audio: AudioInfo): IntentSender? {
         return repository.deleteAudioByUri(audio)
+    }
+
+    fun getPlaylistAudioEntities(id: Int): LiveData<List<AudioEntity>> {
+        return repository.getPlaylistAudioEntities(id)
+    }
+
+    fun updateAudioPlaylistInRepository(data:List<AudioEntity>){
+        repository.audioPlaylist.value=data.map { it.audio }
     }
 }

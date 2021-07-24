@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MediaPlayer"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.activity.player.audio.AudioPlayerActivity"></activity>
+        <activity android:name=".ui.activity.player.audio.AudioPlayerActivity" />
         <activity
             android:name=".ui.activity.player.video.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|layoutDirection" />
@@ -29,8 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.fragments.audioList.PlaylistAudioActivity"/>
         <service android:name=".ui.activity.services.AudioPlayerService"/>
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

@@ -251,7 +251,6 @@ class PlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        Log.e("TAG", "pause")
         updateVideoEntity()
     }
 

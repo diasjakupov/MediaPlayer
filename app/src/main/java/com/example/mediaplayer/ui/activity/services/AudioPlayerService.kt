@@ -35,6 +35,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.NotificationUtil
 import com.google.android.exoplayer2.util.Util
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -43,17 +44,22 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AudioPlayerService : Service() {
     lateinit var player: SimpleExoPlayer
-    @Inject
-    lateinit var repository: Repository
     private lateinit var defaultDataSource: DefaultDataSourceFactory
     lateinit var trackSelector: DefaultTrackSelector
-    lateinit var audioInfo: AudioInfo
-    lateinit var audioList: ArrayList<AudioInfo>
-    private val mBinder: IBinder = LocalBinder()
-    private val NOTIFICATION_ID = 1
     private lateinit var playerNotificationManager: PlayerNotificationManager
     private lateinit var concatenatingMediaSource: ConcatenatingMediaSource
     private lateinit var mediaSession: MediaSessionCompat
+    private val NOTIFICATION_ID = 1
+
+    //data
+    @Inject
+    lateinit var repository: Repository
+    lateinit var audioInfo: AudioInfo
+    lateinit var audioList: ArrayList<AudioInfo>
+    private var isPlaylist: Boolean = false
+    private val mBinder: IBinder = LocalBinder()
+
+
 
     override fun onBind(intent: Intent?): IBinder {
         return mBinder
@@ -61,7 +67,6 @@ class AudioPlayerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.e("TAG", "service created")
         trackSelector = DefaultTrackSelector(this)
         player = SimpleExoPlayer.Builder(this)
             .setTrackSelector(trackSelector)
@@ -81,11 +86,21 @@ class AudioPlayerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.e("TAG", "start command")
+        //get data from intent
         audioInfo = intent?.getParcelableExtra("AUDIO_INFO")!!
-        audioList = repository.audioList.value!!
-        Log.e("TAG", "start commend with $audioInfo")
+
+        //check if the intent came from playlist activity
+        isPlaylist = intent.getBooleanExtra("IS_PLAYLIST", false)
+
+        //get data from repository
+        audioList = if(!isPlaylist){
+            repository.audioList.value!!
+        }else{
+            (repository.audioPlaylist.value as ArrayList<AudioInfo>?)!!
+        }
+
         if (audioInfo.playedDuration == 0L) {
+            concatenatingMediaSource.clear()
             audioList.forEach {
                 val item = MediaItem
                     .Builder()
@@ -95,22 +110,24 @@ class AudioPlayerService : Service() {
                 val source = ProgressiveMediaSource
                     .Factory(defaultDataSource)
                     .createMediaSource(item)
-
                 concatenatingMediaSource.addMediaSource(source)
             }
 
             player.setMediaSource(concatenatingMediaSource)
+
             player.seekToDefaultPosition(audioList.indexOf(audioInfo))
+            player.prepare()
+            player.playWhenReady = true
         }
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
     override fun onDestroy() {
-        Log.e("TAG", "service cancelled")
+        super.onDestroy()
+        Log.e("TAG", "DESTROY SERVICE")
         playerNotificationManager.setPlayer(null)
         player.playWhenReady = false
         player.release()
-        super.onDestroy()
     }
 
     private fun getLargeIcon(audio: AudioInfo): Bitmap? {
@@ -127,7 +144,8 @@ class AudioPlayerService : Service() {
     }
 
     private fun initializeNotificationManager() {
-        playerNotificationManager = PlayerNotificationManager.Builder(this,
+        playerNotificationManager = PlayerNotificationManager.Builder(
+            applicationContext,
             NOTIFICATION_ID,
             "MediaPlayerAudio",
             object : PlayerNotificationManager.MediaDescriptionAdapter {
@@ -143,7 +161,6 @@ class AudioPlayerService : Service() {
                                 AudioPlayerActivity::class.java
                             ).apply {
                                 val audio = audioList[player.currentWindowIndex]
-                                Log.e("TAG", "from intent creating $audio")
                                 audio.playedDuration = player.currentPosition
                                 putExtras(AudioPlayerActivityArgs.Builder(audio).build().toBundle())
                             })
@@ -168,25 +185,24 @@ class AudioPlayerService : Service() {
                     notification: Notification,
                     ongoing: Boolean
                 ) {
+                    Log.e("TAG", "ONGOING $notificationId $ongoing")
                     if(ongoing){
                         startForeground(notificationId, notification)
-                        player.prepare()
-                        player.playWhenReady = true
                     }else{
                         stopForeground(false)
                     }
+
                 }
 
                 override fun onNotificationCancelled(
                     notificationId: Int,
                     dismissedByUser: Boolean
                 ) {
-                    Log.e("TAG", "notification cancelled")
                     stopSelf()
                 }
             })
             .setChannelNameResourceId(R.string.playback_channel_name)
-            .setChannelImportance(PRIORITY_MAX)
+            .setChannelImportance(NotificationUtil.IMPORTANCE_DEFAULT)
             .build()
     }
 

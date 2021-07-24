@@ -12,6 +12,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import com.example.mediaplayer.data.db.datasource.LocalDataSource
+import com.example.mediaplayer.data.db.entites.AudioEntity
+import com.example.mediaplayer.data.db.entites.PlaylistEntity
 import com.example.mediaplayer.data.db.entites.VideoEntity
 import com.example.mediaplayer.data.models.audio.AudioInfo
 import com.example.mediaplayer.data.models.video.VideoInfo
@@ -41,20 +43,18 @@ class Repository constructor(
 
     val viewedVideoList = localDataSource.getVideoList().asLiveData()
     val playlists=localDataSource.getPlaylists().asLiveData()
+    var audioPlaylist= MutableLiveData<List<AudioInfo>>()
 
     private val _playedAudio=MutableLiveData<AudioInfo>()
     val playedAudio:LiveData<AudioInfo> = _playedAudio
 
+    //check permissions
     private fun checkReadingPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             app,
             Manifest.permission.READ_EXTERNAL_STORAGE
         ) ==
                 PackageManager.PERMISSION_GRANTED
-    }
-
-    fun setUpPlayedAudio(audio:AudioInfo){
-        _playedAudio.value=audio
     }
 
     private fun checkWritingPermission(): Boolean {
@@ -64,6 +64,28 @@ class Repository constructor(
         ) ==
                 PackageManager.PERMISSION_GRANTED
         return permission
+    }
+
+    //services
+    fun setUpPlayedAudio(audio:AudioInfo){
+        _playedAudio.value=audio
+    }
+
+    //external storage
+    fun deleteVideoByUri(video: VideoInfo): IntentSender? {
+        if (checkWritingPermission()) {
+            return videoProvider.deleteMediaByUri(video.contentUri)
+        } else {
+            return null
+        }
+    }
+
+    fun deleteAudioByUri(audio: AudioInfo): IntentSender? {
+        if (checkWritingPermission()) {
+            return videoProvider.deleteMediaByUri(audio.contentUri)
+        } else {
+            return null
+        }
     }
 
     suspend fun getVideoList() {
@@ -92,20 +114,21 @@ class Repository constructor(
         }
     }
 
-    fun deleteVideoByUri(video: VideoInfo): IntentSender? {
-        if (checkWritingPermission()) {
-            return videoProvider.deleteMediaByUri(video.contentUri)
-        } else {
-            return null
-        }
+    //database
+    fun getPlaylistAudioEntities(id:Int): LiveData<List<AudioEntity>>{
+        return localDataSource.getAudioList(id).asLiveData()
     }
 
-    fun deleteAudioByUri(audio: AudioInfo): IntentSender? {
-        if (checkWritingPermission()) {
-            return videoProvider.deleteMediaByUri(audio.contentUri)
-        } else {
-            return null
-        }
+    fun getLastCreatedPlaylist(): PlaylistEntity{
+        return localDataSource.getLastCreatedPlaylist()
+    }
+
+    suspend fun createNewAudioEntity(audio:AudioEntity){
+        localDataSource.createNewAudioEntity(audio)
+    }
+
+    suspend fun createNewPlaylist(playlist: PlaylistEntity){
+        localDataSource.createNewPlaylist(playlist)
     }
 
     suspend fun updateOrCreateVideoEntity(videoEntity: VideoEntity) {

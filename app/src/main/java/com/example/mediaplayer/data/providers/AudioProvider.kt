@@ -33,7 +33,6 @@ class AudioProvider constructor(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.DISPLAY_NAME,
             MediaStore.Audio.Media.SIZE,
-            MediaStore.Audio.Albums.ALBUM_ID,
             MediaStore.Audio.Media.DATA,
         )
     }
@@ -53,21 +52,15 @@ class AudioProvider constructor(
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
                 val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
                 val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
-                val albumColumn=cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)
                 val dataColumn=cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
                 while (cursor.moveToNext()) {
                     val idValue = cursor.getLong(idColumn)
                     val title = cursor.getString(titleColumn)
-                    val albumId = cursor.getLong(albumColumn)
                     val contentUri = ContentUris.withAppendedId(
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         idValue
                     )
                     val dataValue=cursor.getString(dataColumn)
-                    val albumUri=ContentUris.withAppendedId(
-                        MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                        albumId
-                    )
                     val size = cursor.getLong(sizeColumn)
 
                     val retriever = MediaMetadataRetriever()
@@ -83,16 +76,10 @@ class AudioProvider constructor(
                         contentUri= contentUri,
                         title=title,
                         duration=time,
-                        size=size, author=author,
-                        albumUri=albumUri, realPath = dataValue,
+                        size=size, author=author, realPath = dataValue,
                         embeddedPicture= retriever.embeddedPicture,
                         bitrate = bitrate))
 
-
-                    if (listOfAudio.size == 20) {
-                        emit(listOfAudio)
-                        listOfAudio.clear()
-                    }
                 }
                 emit(listOfAudio)
             } catch (e: Exception) {

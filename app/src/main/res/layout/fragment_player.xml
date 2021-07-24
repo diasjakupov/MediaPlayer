@@ -13,7 +13,7 @@
         app:controller_layout_id="@layout/video_player_controller"
         app:fastforward_increment="10000"
         app:use_controller="true"
-        app:resize_mode="fit"
+        app:resize_mode="fill"
         android:background="@color/black"
         app:hide_on_touch="true"
         app:show_timeout="2000"

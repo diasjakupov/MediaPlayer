@@ -69,7 +69,7 @@ class AudioInfoFragment : BottomSheetDialogFragment() {
             }
         }
         binding.audioAddToPlaylist.setOnClickListener {
-            val action=AudioInfoFragmentDirections.actionAudioInfoFragmentToPlaylistFormFragment()
+            val action=AudioInfoFragmentDirections.actionAudioInfoFragmentToPlaylistFormFragment(args.audio)
             findNavController().navigate(action)
         }
         return binding.root
