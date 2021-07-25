@@ -1,25 +1,17 @@
 package com.example.mediaplayer.ui.activity.services
 
 import android.app.Notification
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.session.MediaSessionManager
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
-import androidx.core.app.NotificationCompat.PRIORITY_MAX
 import androidx.core.app.TaskStackBuilder
-import androidx.lifecycle.LifecycleService
-import androidx.media.app.NotificationCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.example.mediaplayer.R
 import com.example.mediaplayer.data.models.audio.AudioInfo
 import com.example.mediaplayer.data.repository.Repository
@@ -38,7 +30,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.NotificationUtil
 import com.google.android.exoplayer2.util.Util
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.DelicateCoroutinesApi
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -58,7 +49,6 @@ class AudioPlayerService : Service() {
     lateinit var audioList: ArrayList<AudioInfo>
     private var isPlaylist: Boolean = false
     private val mBinder: IBinder = LocalBinder()
-
 
 
     override fun onBind(intent: Intent?): IBinder {
@@ -93,9 +83,9 @@ class AudioPlayerService : Service() {
         isPlaylist = intent.getBooleanExtra("IS_PLAYLIST", false)
 
         //get data from repository
-        audioList = if(!isPlaylist){
+        audioList = if (!isPlaylist) {
             repository.audioList.value!!
-        }else{
+        } else {
             (repository.audioPlaylist.value as ArrayList<AudioInfo>?)!!
         }
 
@@ -186,9 +176,9 @@ class AudioPlayerService : Service() {
                     ongoing: Boolean
                 ) {
                     Log.e("TAG", "ONGOING $notificationId $ongoing")
-                    if(ongoing){
+                    if (ongoing) {
                         startForeground(notificationId, notification)
-                    }else{
+                    } else {
                         stopForeground(false)
                     }
 

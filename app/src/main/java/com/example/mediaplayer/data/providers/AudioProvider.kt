@@ -80,6 +80,11 @@ class AudioProvider constructor(
                         embeddedPicture= retriever.embeddedPicture,
                         bitrate = bitrate))
 
+                    if(listOfAudio.size==30){
+                        emit(listOfAudio)
+                        listOfAudio.clear()
+                    }
+
                 }
                 emit(listOfAudio)
             } catch (e: Exception) {

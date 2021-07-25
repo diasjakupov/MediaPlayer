@@ -22,29 +22,24 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
         android:text="TextViewTXTTXTXTXTDGDGGDGDGDGGD"
         android:textColor="@color/titleColor"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/playlistIV"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/playlistIV"
         app:layout_constraintTop_toBottomOf="@+id/playlistIV" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="40dp"
-        android:backgroundTint="@color/orange"
-        android:clickable="true"
-        android:scaleType="fitStart"
-        app:fabCustomSize="50dp"
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_play_arrow" />
+        app:layout_constraintTop_toBottomOf="@+id/playlistIV"
+        app:srcCompat="@drawable/ic_three_dots" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
