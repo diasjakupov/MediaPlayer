@@ -32,4 +32,17 @@ class PlaylistsViewModel @Inject constructor(
             repository.createNewAudioEntity(AudioEntity(audio, playlistId))
         }
     }
+
+    fun deletePlaylistEntity(playlistEntity: PlaylistEntity){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.deleteAudioWithPlaylist(playlistEntity)
+            repository.deletePlaylistEntity(playlistEntity)
+        }
+    }
+
+    fun updatePlaylistEntity(playlist:PlaylistEntity){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.updatePlaylistEntity(playlist)
+        }
+    }
 }

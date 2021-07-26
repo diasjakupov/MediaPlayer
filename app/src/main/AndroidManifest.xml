@@ -29,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.fragments.audioList.PlaylistAudioActivity"/>
+        <activity android:name=".ui.activity.playlist.PlaylistAudioActivity"/>
         <service android:name=".ui.activity.services.AudioPlayerService"/>
         <meta-data
             android:name="preloaded_fonts"

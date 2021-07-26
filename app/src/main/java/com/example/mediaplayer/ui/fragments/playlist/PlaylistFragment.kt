@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class PlaylistFragment : Fragment() {
-    @Inject lateinit var adapter: PlaylistAdapter
+    lateinit var adapter: PlaylistAdapter
     val viewModel: PlaylistsViewModel by activityViewModels()
     private lateinit var playlistRV: RecyclerView
 
@@ -26,6 +26,9 @@ class PlaylistFragment : Fragment() {
     ): View? {
         val rootView=inflater.inflate(R.layout.fragment_playlist, container, false)
         playlistRV=rootView.findViewById(R.id.playlistRV)
+        adapter= PlaylistAdapter(){
+            viewModel.deletePlaylistEntity(it)
+        }
         playlistRV.adapter=adapter
         playlistRV.layoutManager=GridLayoutManager(this.context, 2)
 

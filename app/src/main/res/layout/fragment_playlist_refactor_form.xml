@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingTop="16dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    tools:context=".ui.fragments.playlist.PlaylistRefactorForm">
+
+    <EditText
+        android:id="@+id/playlistNameET"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/orange"
+        android:hint="New playlist"
+        android:layout_width="match_parent"
+        android:textCursorDrawable="@drawable/edit_text_cursor" />
+
+    <Button
+        android:id="@+id/playlistformApply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="@color/orange"
+        android:text="APPLY" />
+</LinearLayout>

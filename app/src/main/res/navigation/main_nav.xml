@@ -85,7 +85,7 @@
             app:destination="@id/audioList" />
         <action
             android:id="@+id/action_audioInfoFragment_to_playlistFormFragment"
-            app:destination="@id/playlistFormFragment" />
+            app:destination="@id/playlistCreationFormFragment" />
     </dialog>
     <fragment
         android:id="@+id/playlistsFragment"
@@ -95,10 +95,13 @@
         <action
             android:id="@+id/action_playlistsFragment_to_playlistAudioFragment"
             app:destination="@id/PlaylistAudioActivity" />
+        <action
+            android:id="@+id/action_playlistsFragment_to_playlistRefactorForm"
+            app:destination="@id/playlistRefactorForm" />
     </fragment>
     <dialog
-        android:id="@+id/playlistFormFragment"
-        android:name="com.example.mediaplayer.ui.fragments.playlist.PlaylistFormFragment"
+        android:id="@+id/playlistCreationFormFragment"
+        android:name="com.example.mediaplayer.ui.fragments.playlist.PlaylistCreationFormFragment"
         android:label="fragment_playlist_form"
         tools:layout="@layout/fragment_playlist_form" >
         <argument
@@ -107,10 +110,19 @@
     </dialog>
     <activity
         android:id="@+id/PlaylistAudioActivity"
-        android:name="com.example.mediaplayer.ui.fragments.audioList.PlaylistAudioActivity"
+        android:name="com.example.mediaplayer.ui.activity.playlist.PlaylistAudioActivity"
         android:label="PlaylistAudioActivity" >
         <argument
             android:name="playlist"
             app:argType="com.example.mediaplayer.data.db.entites.PlaylistEntity" />
     </activity>
+    <dialog
+        android:id="@+id/playlistRefactorForm"
+        android:name="com.example.mediaplayer.ui.fragments.playlist.PlaylistRefactorForm"
+        android:label="fragment_playlist_refactor_form"
+        tools:layout="@layout/fragment_playlist_refactor_form" >
+        <argument
+            android:name="playlist"
+            app:argType="com.example.mediaplayer.data.db.entites.PlaylistEntity" />
+    </dialog>
 </navigation>

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.mediaplayer.data.db.entites.AudioEntity
+import com.example.mediaplayer.data.db.entites.PlaylistEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -16,4 +17,7 @@ interface AudioDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertNewAudio(audio: AudioEntity)
+
+    @Query("DELETE FROM audio WHERE playlistId =:playlistId")
+    suspend fun delete(playlistId: Int)
 }

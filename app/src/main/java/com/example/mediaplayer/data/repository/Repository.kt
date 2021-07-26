@@ -123,6 +123,18 @@ class Repository constructor(
         return localDataSource.getLastCreatedPlaylist()
     }
 
+    suspend fun deletePlaylistEntity(playlist: PlaylistEntity){
+        localDataSource.deletePlaylistEntity(playlist)
+    }
+
+    suspend fun deleteAudioWithPlaylist(playlist: PlaylistEntity){
+        localDataSource.deleteAudioWithPlaylist(playlist)
+    }
+
+    suspend fun updatePlaylistEntity(playlist: PlaylistEntity){
+        localDataSource.updatePlaylistEntity(playlist)
+    }
+
     suspend fun createNewAudioEntity(audio:AudioEntity){
         localDataSource.createNewAudioEntity(audio)
     }

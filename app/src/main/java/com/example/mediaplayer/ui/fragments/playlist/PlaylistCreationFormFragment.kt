@@ -22,9 +22,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_playlist_form.*
 
 @AndroidEntryPoint
-class PlaylistFormFragment : BottomSheetDialogFragment() {
+class PlaylistCreationFormFragment : BottomSheetDialogFragment() {
     private val viewModel: PlaylistsViewModel by activityViewModels()
-    private val args: PlaylistFormFragmentArgs by navArgs()
+    private val args: PlaylistCreationFormFragmentArgs by navArgs()
     private lateinit var playlistET: EditText
     private lateinit var playlistApplyBtn: Button
     private lateinit var playlistChipGroup: ChipGroup

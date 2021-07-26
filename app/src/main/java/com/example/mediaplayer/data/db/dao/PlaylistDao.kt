@@ -1,9 +1,6 @@
 package com.example.mediaplayer.data.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.mediaplayer.data.db.entites.PlaylistEntity
 import com.example.mediaplayer.data.db.entites.VideoEntity
 import kotlinx.coroutines.flow.Flow
@@ -19,4 +16,10 @@ interface PlaylistDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdatePlaylistEntity(entity: PlaylistEntity)
+
+    @Delete
+    suspend fun delete(playlistEntity: PlaylistEntity)
+
+    @Update
+    suspend fun update(playlistEntity: PlaylistEntity)
 }

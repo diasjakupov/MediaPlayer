@@ -1,23 +1,16 @@
-package com.example.mediaplayer.ui.fragments.audioList
+package com.example.mediaplayer.ui.activity.playlist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mediaplayer.R
-import com.example.mediaplayer.databinding.AudioListBinding
 import com.example.mediaplayer.databinding.PlaylistAudioActivityBinding
 import com.example.mediaplayer.ui.adapters.AudioListAdapter
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.mediaplayer.ui.fragments.audioList.AudioListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 

@@ -51,4 +51,16 @@ class LocalDataSource @Inject constructor(
     suspend fun deleteVideoEntity(uri:String){
         videoDao.deleteVideoByUri(uri)
     }
+
+    suspend fun deletePlaylistEntity(playlistEntity: PlaylistEntity){
+        playlistDao.delete(playlistEntity)
+    }
+
+    suspend fun deleteAudioWithPlaylist(playlistEntity: PlaylistEntity){
+        audioDao.delete(playlistEntity.id)
+    }
+
+    suspend fun updatePlaylistEntity(playlistEntity: PlaylistEntity){
+        playlistDao.update(playlistEntity)
+    }
 }
